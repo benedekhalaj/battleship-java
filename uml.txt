@@ -1,0 +1,76 @@
+@startuml
+class Input {
+- validateInput()
++ getInput()
+}
+  class Display {
++ void printBoard()
++ void printMenu()
++ void printGameplay()
++ void printResult()
+}
+
+  class Battleship {
+- Display
+- Input
+}
+  class Game {
+- gameMode: GameMode
+- aiType: AiType
++ void play()
+- void playRound()
+- boolean hasWon()
+
+}
+  class Player {
+- ships: List<Ship>
++ Square shoot()
++ boolean isAlive()
+}
+  class Ship {
+- type: ShipType
+- coordinates: Square[]
+}
+  class Square {
+- x: int
+- y: int
+- status: SquareStatus
++  int[] getCoordinates()
++ SquareStatus getStatus()
+}
+  class Board {
+- ocean: Square[][]
++ boolean isPlacementOk()
+}
+  class BoardFactory {
++ Board randomPlacement()
++ Board manualPlacement()
+}
+  enum ShipType {
+CARRIER
+CRUISER
+BATTLESHIP
+SUBMARINE
+DESTROYER
+
+- length: int
++ int getLength()
+}
+  enum SquareStatus {
+EMPTY
+SHIP
+HIT
+MISSED
+
+- character: String
++ String getCharacter()
+}
+
+
+Battleship *-- Display
+Battleship o-- Input
+Battleship -- Game
+Game *-- Board
+Board *-- Square
+
+@enduml
