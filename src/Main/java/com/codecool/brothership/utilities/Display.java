@@ -48,6 +48,7 @@ public class Display {
         for (int rowIndex = COORDINATE_SIGN; rowIndex < playerBoard.length; rowIndex++) {
             StringBuilder displayedPlayerRow = new StringBuilder();
             StringBuilder displayedEnemyRow = new StringBuilder();
+            String playerSeparator = (rowIndex == COORDINATE_SIGN) ? MEDIUM_SEPARATOR + "|" + MEDIUM_SEPARATOR : PLAYER_SEPARATOR;
             for (int colIndex = COORDINATE_SIGN; colIndex < playerBoard[0].length; colIndex++) {
                 String playerField;
                 String enemyField;
@@ -68,7 +69,7 @@ public class Display {
                 displayedPlayerRow.append(playerField);
                 displayedEnemyRow.append(enemyField);
             }
-            System.out.println(displayedPlayerRow + PLAYER_SEPARATOR + displayedEnemyRow);
+            System.out.println(displayedPlayerRow + playerSeparator + displayedEnemyRow);
         }
     }
 
