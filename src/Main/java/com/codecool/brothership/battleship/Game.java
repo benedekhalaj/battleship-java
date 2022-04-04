@@ -31,18 +31,30 @@ public class Game {
     }
 
     public void play() {
-        // Manual or Random
-        // For every ship:
-        // get Direction: Vertical or Horizontal
-        // -validate Direction
-        // get Coordinates: e.g. B7
-        // -validate Coordinates: regex, in range
-        // -check if can place ships: is every piece within board, not colliding
+        // Manual or Random CHECK
+        // For every ship: CHECK
+        // get Direction: Vertical or Horizontal CHECK
+        // -validate Direction CHECK
+        // get Coordinates: e.g. B7 CHECK
+        // -validate Coordinates: regex, in range CHECK
+        // -check if can place ships: is every piece within board, not colliding CHECK
         // get Square objects e.g.[3,6; 3,7; 3,8;],
         // get Ship(Square object)
         // ships.add(Ship object)
         // Board.addShip(Ship object)
         // TODO game loop here
+        ShipPlacementType placementType = getShipPlacementType();
+        if (placementType == ShipPlacementType.MANUAL) {
+            for (ShipType shipType : ShipType.values()) {
+                int shipLength = shipType.getLength();
+                ShipDirection shipDirection = getShipDirection();
+                Coordinates coordinates = getShipCoordinates(shipDirection, shipLength);
+                Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
+            }
+        } else {
+            System.out.println("Random :)");
+        }
+
         List<Ship> player1Ships = new ArrayList<>();
         boolean isRunning = true;
         CurrentPlayer currentPlayer = null;
@@ -52,6 +64,11 @@ public class Game {
             isRunning = false;
         }
         System.out.println("playing in progress");
+    }
+
+    private Square[] getShipSquares(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
+        // TODO Implement getting ShipSquares from arguments
+        return new Square[shipLength];
     }
 
     private ShipPlacementType getShipPlacementType() {
@@ -88,7 +105,7 @@ public class Game {
         return shipDirection;
     }
 
-    private Coordinates getShipCoordinates(ShipDirection shipDirection) {
+    private Coordinates getShipCoordinates(ShipDirection shipDirection, int shipLength) {
         display.printInputMessage("Choose a coordinate!");
         Coordinates coordinates = null;
         boolean isValid = false;
@@ -101,7 +118,7 @@ public class Game {
             } else {
                 coordinates = input.getCoordinates();
             }
-            if (!coordinatesInRange(coordinates)) {
+            if (!coordinatesInRange(coordinates, shipDirection, shipLength)) {
                 display.printMessage("Out of range!");
             } else if (!coordinatesAvailable(coordinates)) {
                 display.printMessage("Fields not available!");
@@ -114,10 +131,11 @@ public class Game {
 
     private boolean coordinatesAvailable(Coordinates coordinates) {
         // TODO Implement ship placement validation
+        // Needs board(s) for checking availability
         return false;
     }
 
-    private boolean coordinatesInRange(Coordinates coordinates) {
+    private boolean coordinatesInRange(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
         // TODO Implement In range check for singular and multiple fields
         return false;
     }
