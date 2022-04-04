@@ -11,7 +11,7 @@ public class Player {
 
     public Square shoot() {
         // TODO returns valid shot square
-        return new Square();
+        return new Square(0, 0);
     }
 
     public boolean isAlive() {
