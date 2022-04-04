@@ -34,7 +34,22 @@ public class Game {
         // TODO game loop here
         Player player1 = placeShipsForPlayer(player1Type);
         Player player2 = placeShipsForPlayer(player2Type);
+        boolean isRunning = true;
+        CurrentPlayer currentPlayer = null;
+        while (isRunning) {
+            currentPlayer = switchPlayer(currentPlayer);
+            playRound();
+            isRunning = false;
+        }
         System.out.println("playing in progress");
+    }
+
+    private CurrentPlayer switchPlayer(CurrentPlayer currentPlayer) {
+        if (currentPlayer == CurrentPlayer.PLAYER1) {
+            return CurrentPlayer.PLAYER2;
+        } else {
+            return CurrentPlayer.PLAYER1;
+        }
     }
 
     private Player placeShipsForPlayer(PlayerType playerType) {
