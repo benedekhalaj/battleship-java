@@ -11,6 +11,10 @@ public class Board {
         // TODO Implement method to add Ship to ocean from ship squares
     }
 
+    public Square[][] getOcean() {
+        return ocean;
+    }
+
     public boolean isPlaceOk(Square square) {
         return true;
     }
