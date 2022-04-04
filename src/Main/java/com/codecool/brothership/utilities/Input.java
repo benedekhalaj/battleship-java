@@ -1,6 +1,7 @@
 package com.codecool.brothership.utilities;
 
 import com.codecool.brothership.battleship.ShipPlacementType;
+import com.codecool.brothership.battleship.Square;
 
 import java.util.Scanner;
 
@@ -19,5 +20,9 @@ public class Input {
 
     public ShipPlacementType getPlacementType() {
         return ShipPlacementType.MANUAL;
+    }
+
+    public Square[] getCoordinates(int length) {
+        return new Square[length];
     }
 }
