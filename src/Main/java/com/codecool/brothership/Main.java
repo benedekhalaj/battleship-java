@@ -1,0 +1,9 @@
+package com.codecool.brothership;
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("hello word");
+    }
+}
