@@ -48,6 +48,7 @@ public class Game {
         ShipPlacementType placementType = getShipPlacementType();
         List<Ship> ships = new ArrayList<>();
         if (placementType == ShipPlacementType.MANUAL) {
+            Board board = boardFactory.manualPlacement();
             for (ShipType shipType : ShipType.values()) {
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
