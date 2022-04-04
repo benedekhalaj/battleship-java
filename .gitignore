@@ -3,7 +3,9 @@
 *.class
 
 # intellij files
-.idea
+.idea/
+*.iml
+out/
 
 # Log file
 *.log
