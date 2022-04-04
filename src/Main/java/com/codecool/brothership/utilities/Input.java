@@ -64,4 +64,8 @@ public class Input {
         return null;
     }
 
+    public boolean isCoordinatesValid(String userInput) {
+        // TODO Implement Input Validation Regex
+        return false;
+    }
 }
