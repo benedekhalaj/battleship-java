@@ -11,6 +11,8 @@ public class Game {
     private final Input input;
     private final GameMode gameMode;
     private final AiType aiType;
+    private static final int BOARD_SIZE = 10;
+    private final BoardFactory boardFactory = new BoardFactory(BOARD_SIZE);
     private PlayerType player1Type;
     private PlayerType player2Type;
 
@@ -44,12 +46,16 @@ public class Game {
         // Board.addShip(Ship object)
         // TODO game loop here
         ShipPlacementType placementType = getShipPlacementType();
+        List<Ship> ships = new ArrayList<>();
         if (placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
                 Coordinates coordinates = getShipCoordinates(shipDirection, shipLength);
                 Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
+                Ship ship = new Ship(shipType, squares);
+                ships.add(ship);
+
             }
         } else {
             System.out.println("Random :)");
