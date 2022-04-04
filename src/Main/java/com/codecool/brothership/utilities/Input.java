@@ -1,5 +1,6 @@
 package com.codecool.brothership.utilities;
 
+import com.codecool.brothership.battleship.Coordinates;
 import com.codecool.brothership.battleship.ShipPlacementType;
 import com.codecool.brothership.battleship.Square;
 
@@ -22,7 +23,20 @@ public class Input {
         return ShipPlacementType.MANUAL;
     }
 
-    public Square[] getCoordinates(int length) {
-        return new Square[length];
+    public Coordinates getCoordinates() {
+        boolean isValid = false;
+        String userInput = null;
+        while (!isValid) {
+            userInput = SCANNER.nextLine();
+            if (validateInput(userInput)) {
+                isValid = true;
+            }
+        }
+        return convertInputToCoordinates(userInput);
+    }
+
+    private Coordinates convertInputToCoordinates(String userInput) {
+        // TODO Implement conversion
+        return new Coordinates(0, 0);
     }
 }
