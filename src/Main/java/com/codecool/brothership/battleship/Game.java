@@ -44,8 +44,6 @@ public class Game {
         // Board.addShip(Ship object)
         // TODO game loop here
         List<Ship> player1Ships = new ArrayList<>();
-        Player player1 = placeShipsForPlayer(player1Type);
-        Player player2 = placeShipsForPlayer(player2Type);
         boolean isRunning = true;
         CurrentPlayer currentPlayer = null;
         while (isRunning) {
@@ -73,27 +71,29 @@ public class Game {
         return shipDirection;
     }
 
+    private ShipPlacementType getShipPlacementType() {
+        display.printMessage("Choose a placement type: manual or random?");
+        ShipPlacementType shipPlacementType = null;
+        boolean isValid = false;
+        while (!isValid) {
+            display.printInputMessage("Placement type (m/r): ");
+            String userInput = input.getInput();
+            if (!input.isPlacementTypeValid(userInput)) {
+                display.printMessage("Invalid placement type!");
+            } else {
+                isValid = true;
+                shipPlacementType = input.getPlacementType(userInput);
+            }
+        }
+        return shipPlacementType;
+    }
+
     private CurrentPlayer switchPlayer(CurrentPlayer currentPlayer) {
         if (currentPlayer == CurrentPlayer.PLAYER1) {
             return CurrentPlayer.PLAYER2;
         } else {
             return CurrentPlayer.PLAYER1;
         }
-    }
-
-    private Player placeShipsForPlayer(PlayerType playerType) {
-        List<Ship> ships;
-        if (playerType == PlayerType.PLAYER) {
-            ShipPlacementType placementType = input.getPlacementType();
-            if (placementType == ShipPlacementType.MANUAL) {
-                ships = placeShipsManually();
-            } else {
-                ships = placeShipsRandomly();
-            }
-        } else {
-            ships = placeShipsRandomly();
-        }
-        return new Player(ships);
     }
 
     private List<Ship> placeShipsManually() {
