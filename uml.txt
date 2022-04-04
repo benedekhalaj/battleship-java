@@ -47,11 +47,11 @@ class Input {
 + Board manualPlacement()
 }
   enum ShipType {
-CARRIER
-CRUISER
-BATTLESHIP
-SUBMARINE
-DESTROYER
+DESTROYER(2)
+SUBMARINE(3)
+CRUISER(3)
+BATTLESHIP(4)
+CARRIER(5)
 
 - length: int
 + int getLength()
@@ -79,3 +79,4 @@ Square *-- SquareStatus
 Player *-- Ship
 
 @enduml
+

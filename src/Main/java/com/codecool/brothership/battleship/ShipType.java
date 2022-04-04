@@ -1,10 +1,11 @@
 package com.codecool.brothership.battleship;
 
 public enum ShipType {
-    CARRIER(2),
+    DESTROYER(2),
+    SUBMARINE(3),
     CRUISER(3),
     BATTLESHIP(4),
-    DESTROYER(5);
+    CARRIER(5);
 
     private final int length;
 
