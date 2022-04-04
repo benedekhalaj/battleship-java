@@ -3,8 +3,8 @@ package com.codecool.brothership.battleship;
 public class Board {
     private final Square[][] ocean;
 
-    public Board(int rows, int cols) {
-        this.ocean = new Square[rows][cols];
+    public Board(Square[][] ocean) {
+        this.ocean = ocean;
     }
 
     public boolean isPlaceOk(Square square) {
