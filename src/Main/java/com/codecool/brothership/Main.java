@@ -1,9 +1,11 @@
 package com.codecool.brothership;
 
 
+import com.codecool.brothership.battleship.Battleship;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("hello word");
+        Battleship battleship = new Battleship();
+        battleship.run();
     }
 }
