@@ -8,7 +8,8 @@ public class Display {
     private static final String SMALL_SEPARATOR = " ";
     private static final String MEDIUM_SEPARATOR = "  ";
     private static final String BIG_SEPARATOR = "   ";
-    private static final String PLAYER_SEPARATOR = BIG_SEPARATOR + "|" + BIG_SEPARATOR;
+    private static final String BIG_PLAYER_SEPARATOR = BIG_SEPARATOR + "|" + BIG_SEPARATOR;
+    private static final String MEDIUM_PLAYER_SEPARATOR = MEDIUM_SEPARATOR + "|" + MEDIUM_SEPARATOR;
     private static final String NEW_LINE = "\n";
     private static final int COORDINATE_SIGN = -1;
 
@@ -48,23 +49,35 @@ public class Display {
         for (int rowIndex = COORDINATE_SIGN; rowIndex < playerBoard.length; rowIndex++) {
             StringBuilder displayedPlayerRow = new StringBuilder();
             StringBuilder displayedEnemyRow = new StringBuilder();
-            String playerSeparator = (rowIndex == COORDINATE_SIGN) ? MEDIUM_SEPARATOR + "|" + MEDIUM_SEPARATOR : PLAYER_SEPARATOR;
+            boolean characterCoordinatesLine = rowIndex == COORDINATE_SIGN;
+            String playerSeparator = (characterCoordinatesLine) ? MEDIUM_PLAYER_SEPARATOR : BIG_PLAYER_SEPARATOR;
+
             for (int colIndex = COORDINATE_SIGN; colIndex < playerBoard[0].length; colIndex++) {
                 String playerField;
                 String enemyField;
-                if (rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN) {
+                boolean topLeftCorner = rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN;
+                boolean numberCoordinatesLine = colIndex == COORDINATE_SIGN;
+
+                if (topLeftCorner) {
                     playerField = BIG_SEPARATOR;
                     enemyField = playerField;
-                } else if (rowIndex == COORDINATE_SIGN && colIndex != COORDINATE_SIGN) {
-                    playerField = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
+                } else if (characterCoordinatesLine) {
+                    String characterCoordinate = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
+                    playerField = characterCoordinate;
                     enemyField = playerField;
-                } else if (colIndex == COORDINATE_SIGN && rowIndex != COORDINATE_SIGN) {
-                    playerField = (rowIndex + 1  < 10) ? (rowIndex + 1) + SMALL_SEPARATOR : String.valueOf((rowIndex + 1));
+                } else if (numberCoordinatesLine) {
+                    int colCoordinate = rowIndex + 1;
+                    if (colCoordinate < 10) {
+                        playerField = colCoordinate + SMALL_SEPARATOR;
+                    } else {
+                        playerField = String.valueOf(colCoordinate);
+                    }
                     enemyField = playerField;
                 } else {
                     playerField = playerBoard[rowIndex][colIndex].getStatus().getCharacter();
                     String enemyFieldChar =  enemyBoard[rowIndex][colIndex].getStatus().getCharacter();
-                    enemyField = (enemyFieldChar.equals(SquareStatus.SHIP.getCharacter())) ? SquareStatus.EMPTY.getCharacter() : enemyFieldChar;
+                    boolean isEnemyShip = enemyFieldChar.equals(SquareStatus.SHIP.getCharacter());
+                    enemyField = (isEnemyShip) ? SquareStatus.EMPTY.getCharacter() : enemyFieldChar;
                 }
                 displayedPlayerRow.append(playerField);
                 displayedEnemyRow.append(enemyField);
