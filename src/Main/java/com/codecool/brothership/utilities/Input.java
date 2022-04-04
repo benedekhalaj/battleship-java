@@ -19,10 +19,6 @@ public class Input {
         return SCANNER.nextLine();
     }
 
-    public ShipPlacementType getPlacementType() {
-        return ShipPlacementType.MANUAL;
-    }
-
     public Coordinates getCoordinates() {
         boolean isValid = false;
         String userInput = null;
@@ -53,4 +49,14 @@ public class Input {
         }
         return null;
     }
+
+    public boolean isPlacementTypeValid(String userInput) {
+        return userInput.equals(ShipPlacementType.MANUAL.getPlacementType()) ||
+                userInput.equals(ShipPlacementType.RANDOM.getPlacementType());
+    }
+
+    public ShipPlacementType getPlacementType() {
+        return ShipPlacementType.MANUAL;
+    }
+
 }
