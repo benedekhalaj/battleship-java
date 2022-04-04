@@ -54,6 +54,23 @@ public class Game {
         System.out.println("playing in progress");
     }
 
+    private ShipPlacementType getShipPlacementType() {
+        display.printMessage("Choose a placement type: manual or random?");
+        ShipPlacementType shipPlacementType = null;
+        boolean isValid = false;
+        while (!isValid) {
+            display.printInputMessage("Placement type (m/r): ");
+            String userInput = input.getInput();
+            if (!input.isPlacementTypeValid(userInput)) {
+                display.printMessage("Invalid placement type!");
+            } else {
+                isValid = true;
+                shipPlacementType = input.getPlacementType(userInput);
+            }
+        }
+        return shipPlacementType;
+    }
+
     private ShipDirection getShipDirection() {
         display.printMessage("Choose a ship direction: horizontal or vertical?");
         ShipDirection shipDirection = null;
@@ -71,21 +88,38 @@ public class Game {
         return shipDirection;
     }
 
-    private ShipPlacementType getShipPlacementType() {
-        display.printMessage("Choose a placement type: manual or random?");
-        ShipPlacementType shipPlacementType = null;
+    private Coordinates getShipCoordinates(ShipDirection shipDirection) {
+        display.printInputMessage("Choose a coordinate!");
+        Coordinates coordinates = null;
         boolean isValid = false;
         while (!isValid) {
-            display.printInputMessage("Placement type (m/r): ");
+            display.printInputMessage("Coordinate: ");
             String userInput = input.getInput();
-            if (!input.isPlacementTypeValid(userInput)) {
-                display.printMessage("Invalid placement type!");
+            if (!input.isCoordinatesValid(userInput)) {
+                display.printMessage("Invalid coordinate format");
+                continue;
+            } else {
+                coordinates = input.getCoordinates();
+            }
+            if (!coordinatesInRange(coordinates)) {
+                display.printMessage("Out of range!");
+            } else if (!coordinatesAvailable(coordinates)) {
+                display.printMessage("Fields not available!");
             } else {
                 isValid = true;
-                shipPlacementType = input.getPlacementType(userInput);
             }
         }
-        return shipPlacementType;
+        return coordinates;
+    }
+
+    private boolean coordinatesAvailable(Coordinates coordinates) {
+        // TODO Implement ship placement validation
+        return false;
+    }
+
+    private boolean coordinatesInRange(Coordinates coordinates) {
+        // TODO Implement In range check for singular and multiple fields
+        return false;
     }
 
     private CurrentPlayer switchPlayer(CurrentPlayer currentPlayer) {
