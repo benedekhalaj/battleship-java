@@ -1,27 +1,28 @@
 package com.codecool.brothership.utilities;
 
-import com.codecool.brothership.battleship.Board;
-import com.codecool.brothership.battleship.Player;
 import com.codecool.brothership.battleship.Square;
+import com.codecool.brothership.battleship.SquareStatus;
 
 public class Display {
     private static final int UPPER_CHAR_NUM = 65;
     private static final String SMALL_SEPARATOR = " ";
     private static final String MEDIUM_SEPARATOR = "  ";
     private static final String BIG_SEPARATOR = "   ";
+    private static final String PLAYER_SEPARATOR = BIG_SEPARATOR + "|" + BIG_SEPARATOR;
     private static final String NEW_LINE = "\n";
+    private static final int COORDINATE_SIGN = -1;
+
 
     public void printBoard(Square[][] board) {
-        int coordinateSign = -1;
-        for (int rowIndex = coordinateSign; rowIndex < board.length; rowIndex++) {
+        for (int rowIndex = COORDINATE_SIGN; rowIndex < board.length; rowIndex++) {
             StringBuilder displayedRow = new StringBuilder();
-            for (int colIndex = coordinateSign; colIndex < board[0].length; colIndex++) {
+            for (int colIndex = COORDINATE_SIGN; colIndex < board[0].length; colIndex++) {
                 String field;
-                if (rowIndex == coordinateSign && colIndex == coordinateSign) {
+                if (rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN) {
                     field = BIG_SEPARATOR;
-                } else if (rowIndex == coordinateSign && colIndex != coordinateSign) {
+                } else if (rowIndex == COORDINATE_SIGN && colIndex != COORDINATE_SIGN) {
                     field = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR ;
-                } else if (colIndex == coordinateSign && rowIndex != coordinateSign) {
+                } else if (colIndex == COORDINATE_SIGN && rowIndex != COORDINATE_SIGN) {
                     field = (rowIndex + 1  < 10) ? (rowIndex + 1) + SMALL_SEPARATOR : String.valueOf((rowIndex + 1));
                 } else {
                     field = board[rowIndex][colIndex].getStatus().getCharacter();
@@ -42,12 +43,33 @@ public class Display {
         // TODO Prints menu
     }
 
-    public void printGameplay(Square[][] playerBoard, Board[][] enemyBoard, Player player) {
-        for (Square[] squares : playerBoard) {
-
-        }
-
+    public void printGameplay(Square[][] playerBoard, Square[][] enemyBoard) {
         // TODO prints the gameplay
+        for (int rowIndex = COORDINATE_SIGN; rowIndex < playerBoard.length; rowIndex++) {
+            StringBuilder displayedPlayerRow = new StringBuilder();
+            StringBuilder displayedEnemyRow = new StringBuilder();
+            for (int colIndex = COORDINATE_SIGN; colIndex < playerBoard[0].length; colIndex++) {
+                String playerField;
+                String enemyField;
+                if (rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN) {
+                    playerField = BIG_SEPARATOR;
+                    enemyField = playerField;
+                } else if (rowIndex == COORDINATE_SIGN && colIndex != COORDINATE_SIGN) {
+                    playerField = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
+                    enemyField = playerField;
+                } else if (colIndex == COORDINATE_SIGN && rowIndex != COORDINATE_SIGN) {
+                    playerField = (rowIndex + 1  < 10) ? (rowIndex + 1) + SMALL_SEPARATOR : String.valueOf((rowIndex + 1));
+                    enemyField = playerField;
+                } else {
+                    playerField = playerBoard[rowIndex][colIndex].getStatus().getCharacter();
+                    String enemyFieldChar =  enemyBoard[rowIndex][colIndex].getStatus().getCharacter();
+                    enemyField = (enemyFieldChar.equals(SquareStatus.SHIP.getCharacter())) ? SquareStatus.EMPTY.getCharacter() : enemyFieldChar;
+                }
+                displayedPlayerRow.append(playerField);
+                displayedEnemyRow.append(enemyField);
+            }
+            System.out.println(displayedPlayerRow + PLAYER_SEPARATOR + displayedEnemyRow);
+        }
     }
 
     public void printResult() {
