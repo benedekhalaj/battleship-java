@@ -72,5 +72,10 @@ Battleship o-- Input
 Battleship -- Game
 Game *-- Board
 Board *-- Square
+Board -- BoardFactory
+Ship *-- Square
+Ship *-- ShipType
+Square *-- SquareStatus
+Player *-- Ship
 
 @enduml
