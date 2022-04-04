@@ -10,11 +10,13 @@ public class BoardFactory {
     }
 
     public Board randomPlacement() {
+        // TODO Implement random placement
         Square[][] board = new Square[size][size];
         return new Board(board);
     }
 
-    public Board manualPlacement(List<Ship> ships) {
+    public Board manualPlacement() {
+        // Return empty board so player can initialize it
         Square[][] board = new Square[size][size];
         return new Board(board);
     }
