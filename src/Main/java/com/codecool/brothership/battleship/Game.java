@@ -31,7 +31,19 @@ public class Game {
     }
 
     public void play() {
+        // Manual or Random
+        // For every ship:
+        // get Direction: Vertical or Horizontal
+        // -validate Direction
+        // get Coordinates: e.g. B7
+        // -validate Coordinates: regex, in range
+        // -check if can place ships: is every piece within board, not colliding
+        // get Square objects e.g.[3,6; 3,7; 3,8;],
+        // get Ship(Square object)
+        // ships.add(Ship object)
+        // Board.addShip(Ship object)
         // TODO game loop here
+        List<Ship> player1Ships = new ArrayList<>();
         Player player1 = placeShipsForPlayer(player1Type);
         Player player2 = placeShipsForPlayer(player2Type);
         boolean isRunning = true;
@@ -42,6 +54,23 @@ public class Game {
             isRunning = false;
         }
         System.out.println("playing in progress");
+    }
+
+    private ShipDirection getShipDirection() {
+        display.printMessage("Choose a ship direction: horizontal or vertical?");
+        ShipDirection shipDirection = null;
+        boolean isValid = false;
+        while (!isValid) {
+            display.printInputMessage("Direction (h/v): ");
+            String userInput = input.getInput();
+            if (!input.isDirectionValid(userInput)) {
+                display.printMessage("Invalid direction!");
+            } else {
+                isValid = true;
+                shipDirection = input.getDirection(userInput);
+            }
+        }
+        return shipDirection;
     }
 
     private CurrentPlayer switchPlayer(CurrentPlayer currentPlayer) {
