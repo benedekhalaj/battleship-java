@@ -15,6 +15,10 @@ public class Game {
     private final BoardFactory boardFactory = new BoardFactory(BOARD_SIZE);
     private PlayerType player1Type;
     private PlayerType player2Type;
+    private Board player1Board;
+    private Board player2Board;
+    private Player player1;
+    private Player player2;
 
     public Game(Display display, Input input, GameMode gameMode, AiType aiType) {
         this.display = display;
@@ -33,36 +37,10 @@ public class Game {
     }
 
     public void play() {
-        // Manual or Random CHECK
-        // For every ship: CHECK
-        // get Direction: Vertical or Horizontal CHECK
-        // -validate Direction CHECK
-        // get Coordinates: e.g. B7 CHECK
-        // -validate Coordinates: regex, in range CHECK
-        // -check if can place ships: is every piece within board, not colliding CHECK
-        // get Square objects e.g.[3,6; 3,7; 3,8;],
-        // get Ship(Square object)
-        // ships.add(Ship object)
-        // Board.addShip(Ship object)
         // TODO game loop here
-        ShipPlacementType placementType = getShipPlacementType();
-        List<Ship> ships = new ArrayList<>();
-        if (placementType == ShipPlacementType.MANUAL) {
-            Board board = boardFactory.manualPlacement();
-            for (ShipType shipType : ShipType.values()) {
-                int shipLength = shipType.getLength();
-                ShipDirection shipDirection = getShipDirection();
-                Coordinates coordinates = getShipCoordinates(shipDirection, shipLength);
-                Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
-                Ship ship = new Ship(shipType, squares);
-                ships.add(ship);
+        placeShipsForPlayer(CurrentPlayer.PLAYER1);
+        placeShipsForPlayer(CurrentPlayer.PLAYER2);
 
-            }
-        } else {
-            System.out.println("Random :)");
-        }
-
-        List<Ship> player1Ships = new ArrayList<>();
         boolean isRunning = true;
         CurrentPlayer currentPlayer = null;
         while (isRunning) {
@@ -71,6 +49,40 @@ public class Game {
             isRunning = false;
         }
         System.out.println("playing in progress");
+    }
+
+    private void placeShipsForPlayer(CurrentPlayer currentPlayer) {
+        PlayerType playerType = (currentPlayer == CurrentPlayer.PLAYER1) ? player1Type : player2Type;
+        Board board = null;
+        List<Ship> ships = new ArrayList<>();
+        ShipPlacementType placementType = getShipPlacementType();
+        if (playerType == PlayerType.PLAYER && placementType == ShipPlacementType.MANUAL) {
+            board = boardFactory.manualPlacement();
+            for (ShipType shipType : ShipType.values()) {
+                display.printBoard(board.getOcean());
+                int shipLength = shipType.getLength();
+                ShipDirection shipDirection = getShipDirection();
+                Coordinates coordinates = getShipCoordinates(shipDirection, shipLength);
+                Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
+                Ship ship = new Ship(shipType, squares);
+                ships.add(ship);
+                board.addShip(ship);
+            }
+        } else {
+            // TODO Implement random
+            System.out.println("Random :)");
+        }
+        setShipsForPlayer(currentPlayer, board, ships);
+    }
+
+    private void setShipsForPlayer(CurrentPlayer currentPlayer, Board board, List<Ship> ships) {
+        if (currentPlayer == CurrentPlayer.PLAYER1) {
+            this.player1Board = board;
+            this.player1 = new Player(ships);
+        } else if (currentPlayer == CurrentPlayer.PLAYER2) {
+            this.player2Board = board;
+            this.player2 = new Player(ships);
+        }
     }
 
     private Square[] getShipSquares(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
@@ -125,9 +137,9 @@ public class Game {
             } else {
                 coordinates = input.getCoordinates();
             }
-            if (!coordinatesInRange(coordinates, shipDirection, shipLength)) {
+            if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
                 display.printMessage("Out of range!");
-            } else if (!coordinatesAvailable(coordinates)) {
+            } else if (!isCoordinatesEmpty(coordinates)) {
                 display.printMessage("Fields not available!");
             } else {
                 isValid = true;
@@ -136,13 +148,13 @@ public class Game {
         return coordinates;
     }
 
-    private boolean coordinatesAvailable(Coordinates coordinates) {
+    private boolean isCoordinatesEmpty(Coordinates coordinates) {
         // TODO Implement ship placement validation
         // Needs board(s) for checking availability
         return false;
     }
 
-    private boolean coordinatesInRange(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
+    private boolean isCoordinatesInRange(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
         // TODO Implement In range check for singular and multiple fields
         return false;
     }
@@ -153,16 +165,6 @@ public class Game {
         } else {
             return CurrentPlayer.PLAYER1;
         }
-    }
-
-    private List<Ship> placeShipsManually() {
-        // TODO place ships manually in a loop
-        return new ArrayList<>();
-    }
-
-    private List<Ship> placeShipsRandomly() {
-        // TODO place ships randomly
-        return new ArrayList<>();
     }
 
     private void setPlayerTypes() {
