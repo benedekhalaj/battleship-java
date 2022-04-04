@@ -38,17 +38,29 @@ public class Game {
 
     public void play() {
         // TODO game loop here
+
+        display.printMessage("Placement phase...");
         placeShipsForPlayer(CurrentPlayer.PLAYER1);
         placeShipsForPlayer(CurrentPlayer.PLAYER2);
 
+        display.printMessage("Shooting phase...");
         boolean isRunning = true;
         CurrentPlayer currentPlayer = null;
         while (isRunning) {
             currentPlayer = switchPlayer(currentPlayer);
-            playRound();
-            isRunning = false;
+            playRound(currentPlayer);
+            if (hasWon(currentPlayer)) {
+                isRunning = false;
+            }
         }
-        System.out.println("playing in progress");
+        System.out.println(currentPlayer + " has won!");
+    }
+
+    private void playRound(CurrentPlayer currentPlayer) {
+        // TODO players make moves.
+        display.printInputMessage("Shoot: ");
+        String userInput = input.getInput();
+        display.printMessage(userInput);
     }
 
     private void placeShipsForPlayer(CurrentPlayer currentPlayer) {
@@ -183,11 +195,7 @@ public class Game {
         }
     }
 
-    private void playRound() {
-        // TODO players make moves.
-    }
-
-    private boolean hasWon() {
+    private boolean hasWon(CurrentPlayer currentPlayer) {
         //TODO return true if the game has ended by rules
         return false;
     }
