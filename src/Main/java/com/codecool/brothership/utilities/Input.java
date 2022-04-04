@@ -55,8 +55,13 @@ public class Input {
                 userInput.equals(ShipPlacementType.RANDOM.getPlacementType());
     }
 
-    public ShipPlacementType getPlacementType() {
-        return ShipPlacementType.MANUAL;
+    public ShipPlacementType getPlacementType(String userInput) {
+        for (ShipPlacementType shipPlacementType : ShipPlacementType.values()) {
+            if (userInput.equals(shipPlacementType.getPlacementType())) {
+                return shipPlacementType;
+            }
+        }
+        return null;
     }
 
 }
