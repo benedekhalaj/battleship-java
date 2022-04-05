@@ -28,7 +28,6 @@ public class Game {
     }
 
     public void play() {
-        // Could refactor this into an object
         final PlayerType[] playerTypes = getPlayerTypes();
         final PlayerType playerType1 = playerTypes[0];
         final PlayerType playerType2 = playerTypes[1];
@@ -47,10 +46,12 @@ public class Game {
             currentPlayer = (currentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player1 : player2;
             opponentPlayer = (opponentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER1) ? player2 : player1;
             playRound(currentPlayer, opponentPlayer);
-            if (hasWon(currentPlayer)) {
+            boolean hasWon = !isPlayerAlive(opponentPlayer);
+            if (hasWon) {
                 isRunning = false;
             }
         }
+        display.printMessage(currentPlayer.getId().toString() + " has won the game!");
     }
 
     private void playRound(Player player, Player opponent) {
@@ -265,8 +266,7 @@ public class Game {
         return new PlayerType[]{player1Type, player2Type};
     }
 
-    private boolean hasWon(Player player) {
-        //TODO return true if the game has ended by rules
-        return false;
+    private boolean isPlayerAlive(Player player) {
+        return player.isAlive();
     }
 }

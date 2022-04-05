@@ -35,8 +35,7 @@ public class Player {
     }
 
     public boolean isAlive() {
-        // TODO return true if player has ship, what has not sunk yet
-        return true;
+        return board.isThereAnyShips();
     }
 
     public void createBoard(int boardSize, List<Ship> ships) {

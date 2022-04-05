@@ -111,4 +111,15 @@ public class Board {
             square.changeStatus(ShipSquareStatus.SUNK);
         }
     }
+
+    public boolean isThereAnyShips() {
+        for (Ship ship : ships) {
+            for (ShipSquare square : ship.getSquares()) {
+                if (square.getStatus() != ShipSquareStatus.SUNK) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
