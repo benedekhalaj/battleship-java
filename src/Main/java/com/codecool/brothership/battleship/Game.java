@@ -213,7 +213,7 @@ public class Game {
     }
 
     private boolean isCoordinateInBoard(int starterX, int starterY) {
-        return starterX < BOARD_SIZE && starterY < BOARD_SIZE && starterX > 0 && starterY > 0;
+        return starterX < BOARD_SIZE && starterY < BOARD_SIZE && starterX >= 0 && starterY >= 0;
     }
 
     private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
