@@ -74,7 +74,7 @@ public class Game {
                 display.printBoard(board.getOcean());
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
-                Coordinates coordinates = getShipCoordinates(shipDirection, shipLength);
+                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength);
                 Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
                 Ship ship = new Ship(shipType, squares);
                 ships.add(ship);
@@ -97,7 +97,7 @@ public class Game {
         }
     }
 
-    private Square[] getShipSquares(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
+    private Square[] getShipSquares(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
         // TODO Implement getting ShipSquares from arguments
         return new Square[shipLength];
     }
@@ -137,9 +137,9 @@ public class Game {
         return shipDirection;
     }
 
-    private Coordinates getShipCoordinates(ShipDirection shipDirection, int shipLength) {
+    private Coordinate[] getShipCoordinates(ShipDirection shipDirection, int shipLength) {
         display.printInputMessage("Choose a coordinate!");
-        Coordinates coordinates = null;
+        Coordinate[] coordinates = null;
         boolean isValid = false;
         while (!isValid) {
             display.printInputMessage("Coordinate: ");
@@ -152,32 +152,37 @@ public class Game {
                 display.printMessage("Coordinate is out of battlefield");
                 continue;
             }
-            Coordinates coordinate = convertInputToCoordinate(userInput);
+            Coordinate coordinate = convertInputToCoordinate(userInput);
             if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
                 display.printMessage("Out of range!");
             } else if (!isCoordinatesEmpty(coordinates)) {
                 display.printMessage("Fields not available!");
             } else {
+                coordinates = createShipCoordinates(coordinate, shipDirection, shipLength);
                 isValid = true;
             }
         }
         return coordinates;
     }
 
-    private Coordinates convertInputToCoordinate(String userInput) {
+    private Coordinate[] createShipCoordinates(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
+        return new Coordinate[0];
+    }
+
+    private Coordinate convertInputToCoordinate(String userInput) {
         int asciiUpperLetterNum = 65;
         int x = asciiUpperLetterNum - (int) userInput.toUpperCase().charAt(0);
         int y = Integer.parseInt(userInput.substring(1));
-        return new Coordinates(x, y);
+        return new Coordinate(x, y);
     }
 
-    private boolean isCoordinatesEmpty(Coordinates coordinates) {
+    private boolean isCoordinatesEmpty(Coordinate[] coordinates) {
         // TODO Implement ship placement validation
         // Needs board(s) for checking availability
         return false;
     }
 
-    private boolean isCoordinatesInRange(Coordinates coordinates, ShipDirection shipDirection, int shipLength) {
+    private boolean isCoordinatesInRange(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
         // TODO Implement In range check for singular and multiple fields
         return false;
     }

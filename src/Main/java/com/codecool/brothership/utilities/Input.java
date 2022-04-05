@@ -1,6 +1,6 @@
 package com.codecool.brothership.utilities;
 
-import com.codecool.brothership.battleship.Coordinates;
+import com.codecool.brothership.battleship.Coordinate;
 import com.codecool.brothership.battleship.ShipDirection;
 import com.codecool.brothership.battleship.ShipPlacementType;
 
@@ -20,7 +20,7 @@ public class Input {
         return SCANNER.nextLine();
     }
 
-    public Coordinates getCoordinates() {
+    public Coordinate getCoordinates() {
         boolean isValid = false;
         String userInput = null;
         while (!isValid) {
@@ -32,9 +32,9 @@ public class Input {
         return convertInputToCoordinates(userInput);
     }
 
-    private Coordinates convertInputToCoordinates(String userInput) {
+    private Coordinate convertInputToCoordinates(String userInput) {
         // TODO Implement conversion
-        return new Coordinates(0, 0);
+        return new Coordinate(0, 0);
     }
 
     public boolean isDirectionValid(String userInput) {
