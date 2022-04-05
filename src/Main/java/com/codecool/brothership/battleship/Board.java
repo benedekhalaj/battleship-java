@@ -79,4 +79,56 @@ public class Board {
     public List<Ship> getShips() {
         return this.ships;
     }
+
+    public ShotStatus getShotStatus(Coordinate coordinate) {
+        for (Ship ship : ships) {
+            for (ShipSquare shipSquare : ship.getSquares()) {
+                if (coordinate.getX() == shipSquare.getX() && coordinate.getY() == shipSquare.getY()) {
+                    if (shipSquare.getStatus() == ShipSquareStatus.SHIP) {
+                        shipSquare.changeStatus(ShipSquareStatus.HIT);
+                        if (isShipSunk(ship)) {
+                            return ShotStatus.SINK;
+                        } else {
+                            return ShotStatus.HIT;
+                        }
+                    } else {
+                        return ShotStatus.INVALID;
+                    }
+                }
+            }
+        }
+        for (WaterSquare waterSquare : ocean) {
+            if (coordinate.getX() == waterSquare.getX() && coordinate.getY() == waterSquare.getY()) {
+                if (waterSquare.getStatus() == WaterSquareStatus.EMPTY) {
+                    waterSquare.changeStatus(WaterSquareStatus.MISSED);
+                    return ShotStatus.MISS;
+                } else {
+                    return ShotStatus.INVALID;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isShipSunk(Ship ship) {
+        int shipLength = ship.getType().getLength();
+        int hitCount = 0;
+        for (ShipSquare square : ship.getSquares()) {
+            if (square.getStatus() == ShipSquareStatus.HIT) {
+                hitCount++;
+            }
+        }
+        boolean isShipDestroyed = shipLength == hitCount;
+        if (isShipDestroyed) {
+            sinkShip(ship);
+            return true;
+        }
+        return false;
+    }
+
+    private void sinkShip(Ship ship) {
+        for (ShipSquare square : ship.getSquares()) {
+            square.changeStatus(ShipSquareStatus.SUNK);
+        }
+    }
 }
