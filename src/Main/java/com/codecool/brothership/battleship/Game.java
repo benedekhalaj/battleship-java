@@ -126,6 +126,7 @@ public class Game {
                 continue;
             }
             Coordinate starterCoordinate = convertInputToCoordinate(userInput);
+            System.out.println("x: " + starterCoordinate.getX() + "y: " + starterCoordinate.getY());
             if (isCoordinatesValid(starterCoordinate, shipDirection, shipLength, ships)) {
                 squares = createShipSquares(starterCoordinate, shipDirection, shipLength);
                 isValid = true;
@@ -164,12 +165,8 @@ public class Game {
         int starterY = starterCoordinate.getY();
         boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
         for (int i = 0; i < shipLength; i++) {
-            if (isIncrementX){
-                starterX++;
-            } else {
-                starterY++;
-            }
-            if (isCoordinateInBoard(starterX, starterY)) {
+
+            if (!isCoordinateInBoard(starterX, starterY)) {
                 display.printMessage("Coordinate is out of battlefield");
                 return false;
             }
@@ -179,12 +176,17 @@ public class Game {
                     return false;
                 }
             }
+            if (isIncrementX){
+                starterX++;
+            } else {
+                starterY++;
+            }
         }
         return true;
     }
 
     private boolean isCoordinateInBoard(int starterX, int starterY) {
-        return starterX >= BOARD_SIZE || starterY >= BOARD_SIZE;
+        return starterX < BOARD_SIZE && starterY < BOARD_SIZE;
     }
 
     private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
