@@ -107,8 +107,9 @@ public class Game {
         ShipPlacementType shipPlacementType = null;
         boolean isValid = false;
         while (!isValid) {
-            display.printInputMessage("Placement type (m/r): ");
-            String userInput = input.getInput();
+            display.printInputMessage("Placement type Manual(m)/Random(r): ");
+            //TODO Should we write a method, in input, what returns true if placement type is valid?
+            String userInput = input.getInput();// Should we write a method, in input, what returns true if placement type is valid?
             if (!input.isPlacementTypeValid(userInput)) {
                 display.printMessage("Invalid placement type!");
             } else {
@@ -146,9 +147,12 @@ public class Game {
             if (!input.isCoordinatesValid(userInput)) {
                 display.printMessage("Invalid coordinate format");
                 continue;
-            } else {
-                coordinates = input.getCoordinates();
             }
+            if (!input.isCoordinateInBoard(userInput, BOARD_SIZE)) {
+                display.printMessage("Coordinate is out of battlefield");
+                continue;
+            }
+            Coordinates coordinate = convertInputToCoordinate(userInput);
             if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
                 display.printMessage("Out of range!");
             } else if (!isCoordinatesEmpty(coordinates)) {
@@ -158,6 +162,13 @@ public class Game {
             }
         }
         return coordinates;
+    }
+
+    private Coordinates convertInputToCoordinate(String userInput) {
+        int asciiUpperLetterNum = 65;
+        int x = asciiUpperLetterNum - (int) userInput.toUpperCase().charAt(0);
+        int y = Integer.parseInt(userInput.substring(1));
+        return new Coordinates(x, y);
     }
 
     private boolean isCoordinatesEmpty(Coordinates coordinates) {

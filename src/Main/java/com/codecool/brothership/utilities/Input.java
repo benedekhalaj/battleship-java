@@ -3,9 +3,10 @@ package com.codecool.brothership.utilities;
 import com.codecool.brothership.battleship.Coordinates;
 import com.codecool.brothership.battleship.ShipDirection;
 import com.codecool.brothership.battleship.ShipPlacementType;
-import com.codecool.brothership.battleship.Square;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Input {
     private static final Scanner SCANNER = new Scanner(System.in);
@@ -66,6 +67,21 @@ public class Input {
 
     public boolean isCoordinatesValid(String userInput) {
         // TODO Implement Input Validation Regex
-        return false;
+        String regex = "^[a-zA-Z][0-9]{1,2}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(userInput);
+        return matcher.find();
+    }
+
+    public boolean isCoordinateInBoard(String userInput, int range) {
+        int asciiUpperLetterNum = 65;
+        int asciiLowerLetterNum = 97;
+        char maxUpperCoordinateChar = (char) (asciiUpperLetterNum + range - 1);
+        char maxLowerCoordinateChar = (char) (asciiLowerLetterNum + range - 1);
+        String numberOfDigits = (range > 9) ? "{1,2}" : "";
+        String regex = "^[a-" + maxLowerCoordinateChar + "A-"+ maxUpperCoordinateChar + "][0-9]" + numberOfDigits + "$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(userInput);
+        return matcher.find();
     }
 }
