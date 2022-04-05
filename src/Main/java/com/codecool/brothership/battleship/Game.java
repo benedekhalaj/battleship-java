@@ -54,13 +54,17 @@ public class Game {
     }
 
     private void playRound(Player player, Player opponent) {
-        // TODO players make moves.
-        // get shot input CHECK
-        // validate shot input (regex, in range)
-        // ask opponent about shot status (HIT, MISSED, Already shot!);
-        display.printBattlefield(player.getBoardRows(), opponent.getBoardRows(), BOARD_SIZE);
-        Coordinate shotCoordinate = getShotCoordinate();
-
+        // TODO Display board, current player, etc.
+        boolean isValid = false;
+        while (!isValid) {
+            display.printBattlefield(player.getBoardRows(), opponent.getBoardRows(), BOARD_SIZE);
+            Coordinate shotCoordinate = getShotCoordinate();
+            ShotStatus shotStatus = opponent.getShotStatus(shotCoordinate);
+            display.printMessage(shotStatus.getMessage());
+            if (shotStatus != ShotStatus.INVALID) {
+                isValid = true;
+            }
+        }
     }
 
     private Coordinate getShotCoordinate() {
