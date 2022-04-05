@@ -63,6 +63,7 @@ public class Game {
         ShipPlacementType placementType = getShipPlacementType();
         if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
+                display.printPlacementBoard(ships, BOARD_SIZE);
                 // TODO print board for ship placement
                 display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();

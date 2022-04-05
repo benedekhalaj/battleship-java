@@ -1,6 +1,8 @@
 package com.codecool.brothership.utilities;
 
-import com.codecool.brothership.battleship.Square;
+import com.codecool.brothership.battleship.*;
+
+import java.util.List;
 
 public class Display {
     private static final int UPPER_CHAR_NUM = 65;
@@ -31,7 +33,7 @@ public class Display {
 //            }
 //            System.out.println(displayedRow);
 //        }
-        // TODO prints the board(ocean)
+//         TODO prints the board(ocean)
     }
 
     public void printGameModes() {
@@ -103,5 +105,40 @@ public class Display {
     public void printMessage(String message) {
         // Prints message with newline.
         System.out.println(message);
+    }
+
+    public void printPlacementBoard(List<Ship> ships, int boardSize) {
+        for (int y = COORDINATE_SIGN; y < boardSize; y++) {
+            StringBuilder displayedRow = new StringBuilder();
+            for (int x = COORDINATE_SIGN; x < boardSize; x++) {
+                String squareCharacter;
+                if (y == COORDINATE_SIGN && x == COORDINATE_SIGN) {
+                    squareCharacter = MEDIUM_SEPARATOR;
+                } else if (y == COORDINATE_SIGN) {
+                    squareCharacter = (x + 1 < 10) ? (x + 1) + SMALL_SEPARATOR : String.valueOf((x + 1));
+                } else if (x == COORDINATE_SIGN) {
+                    squareCharacter = Character.toString(UPPER_CHAR_NUM + y) + SMALL_SEPARATOR;
+                } else {
+                    if (isShipAtCoordinate(ships, y, x)) {
+                        squareCharacter = ShipSquareStatus.SHIP.getCharacter();
+                    } else {
+                        squareCharacter = WaterSquareStatus.EMPTY.getCharacter();
+                    }
+                }
+                displayedRow.append(squareCharacter);
+            }
+            System.out.println(displayedRow);
+        }
+    }
+
+    private boolean isShipAtCoordinate(List<Ship> ships, int y, int x) {
+        for (Ship ship : ships) {
+            for (ShipSquare shipSquare : ship.getSquares()) {
+                if (shipSquare.getX() == x && shipSquare.getY() == y) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
