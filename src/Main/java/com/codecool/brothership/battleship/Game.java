@@ -3,7 +3,6 @@ package com.codecool.brothership.battleship;
 import com.codecool.brothership.utilities.Display;
 import com.codecool.brothership.utilities.Input;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -65,10 +64,10 @@ public class Game {
         if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
                 display.printBoard(board.getOcean());
+                display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
-                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength, player.getShips());
-                Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
+                Square[] squares = getShipSquares(shipDirection, shipLength, player.getShips());
                 Ship ship = new Ship(shipType, squares);
                 player.addShip(ship);
                 board.addShip(ship);
@@ -79,10 +78,6 @@ public class Game {
         }
     }
 
-    private Square[] getShipSquares(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
-        // TODO Implement getting ShipSquares from arguments
-        return new Square[shipLength];
-    }
 
     private ShipPlacementType getShipPlacementType() {
         display.printMessage("Choose a placement type: manual or random?");
@@ -119,7 +114,7 @@ public class Game {
         return shipDirection;
     }
 
-    private Coordinate[] getShipCoordinates(ShipDirection shipDirection, int shipLength, List<Ship> ships) {
+    private Square[] getShipSquares(ShipDirection shipDirection, int shipLength, List<Ship> ships) {
         display.printInputMessage("Choose a coordinate!");
         Square[] squares = null;
         boolean isValid = false;
@@ -159,7 +154,7 @@ public class Game {
     private Coordinate convertInputToCoordinate(String userInput) {
         int asciiUpperLetterNum = 65;
         int x = asciiUpperLetterNum - (int) userInput.toUpperCase().charAt(0);
-        int y = Integer.parseInt(userInput.substring(1));
+        int y = Integer.parseInt(userInput.substring(1)) - 1;
         return new Coordinate(x, y);
     }
 
@@ -179,7 +174,7 @@ public class Game {
                 return false;
             }
             for (Ship ship : ships) {
-                if (!isNeighbourSquaresEmpty(starterX, starterY)) {
+                if (!isNeighbourSquaresEmpty(starterX, starterY, ship)) {
                     display.printMessage("Fields not available!");
                     return false;
                 }
@@ -192,7 +187,15 @@ public class Game {
         return starterX >= BOARD_SIZE || starterY >= BOARD_SIZE;
     }
 
-    private boolean isNeighbourSquaresEmpty(int starterX, int starterY) {
+    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
+        Square[] shipSquares = ship.getSquares();
+        for (Square shipSquare : shipSquares) {
+            int shipX = shipSquare.getX();
+            int shipY = shipSquare.getY();
+            if (newCoordinateX == shipX || newCoordinateY == shipY) {
+                return false;
+            }
+        }
         return true;
     }
 
