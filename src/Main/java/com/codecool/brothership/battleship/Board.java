@@ -75,4 +75,8 @@ public class Board {
         }
         return null;
     }
+
+    public List<Ship> getShips() {
+        return this.ships;
+    }
 }

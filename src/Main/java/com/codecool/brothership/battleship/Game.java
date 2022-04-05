@@ -46,7 +46,7 @@ public class Game {
 
         while (isRunning) {
             currentPlayer = (currentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player1 : player2;
-            opponent = (opponent == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player2 : player1;
+            opponent = (opponent == null || currentPlayer.getId() == PlayerId.PLAYER1) ? player2 : player1;
             playRound(currentPlayer, opponent);
             if (hasWon(currentPlayer)) {
                 isRunning = false;
@@ -70,7 +70,7 @@ public class Game {
                 display.printPlacementBoard(ships, BOARD_SIZE);
                 display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
-                ShipSquare[] squares = getShipSquares(shipLength, player.getShips());
+                ShipSquare[] squares = getShipSquares(shipLength, ships);
                 Ship ship = new Ship(shipType, squares);
                 ships.add(ship);
             }
@@ -193,7 +193,7 @@ public class Game {
     }
 
     private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
-        Square[] shipSquares = ship.getSquares();
+        ShipSquare[] shipSquares = ship.getSquares();
         for (Square shipSquare : shipSquares) {
             int shipX = shipSquare.getX();
             int shipY = shipSquare.getY();
