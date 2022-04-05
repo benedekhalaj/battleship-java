@@ -1,18 +1,18 @@
 package com.codecool.brothership.battleship;
 
 public class ShipSquare extends Square{
-    private SquareStatus status;
+    private ShipSquareStatus status;
 
-    public SquareStatus getStatus() {
+    public ShipSquareStatus getStatus() {
         return status;
     }
 
     public ShipSquare(int x, int y) {
         super(x, y);
-        this.status = SquareStatus.SHIP;
+        this.status = ShipSquareStatus.SHIP;
     }
 
-    public void changeStatus(SquareStatus squareStatus) {
+    public void changeStatus(ShipSquareStatus squareStatus) {
         this.status = squareStatus;
     }
 }

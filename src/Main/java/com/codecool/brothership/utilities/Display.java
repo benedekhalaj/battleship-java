@@ -1,7 +1,6 @@
 package com.codecool.brothership.utilities;
 
 import com.codecool.brothership.battleship.Square;
-import com.codecool.brothership.battleship.SquareStatus;
 
 public class Display {
     private static final int UPPER_CHAR_NUM = 65;
