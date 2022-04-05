@@ -3,8 +3,9 @@ package com.codecool.brothership.battleship;
 public class Board {
     private final Square[][] ocean;
 
-    public Board(Square[][] ocean) {
-        this.ocean = ocean;
+    public Board(int size) {
+        // TODO Implement filling board
+        this.ocean = new Square[size][size];
     }
 
     public void addShip(Ship ship) {

@@ -12,20 +12,12 @@ public class Game {
     private final GameMode gameMode;
     private final AiType aiType;
     private static final int BOARD_SIZE = 10;
-    private final BoardFactory boardFactory = new BoardFactory(BOARD_SIZE);
-    private PlayerType player1Type;
-    private PlayerType player2Type;
-    private Board player1Board;
-    private Board player2Board;
-    private Player player1;
-    private Player player2;
 
     public Game(Display display, Input input, GameMode gameMode, AiType aiType) {
         this.display = display;
         this.input = input;
         this.gameMode = gameMode;
         this.aiType = aiType;
-        setPlayerTypes();
     }
 
     public Game(Display display, Input input, GameMode gameMode) {
@@ -33,43 +25,44 @@ public class Game {
         this.input = input;
         this.gameMode = gameMode;
         this.aiType = null;
-        setPlayerTypes();
     }
 
     public void play() {
-        // TODO game loop here
+        // Could refactor this into an object
+        final PlayerType[] playerTypes = getPlayerTypes();
+        final PlayerType playerType1 = playerTypes[0];
+        final PlayerType playerType2 = playerTypes[1];
+        final Player player1 = new Player(PlayerId.PLAYER1, playerType1);
+        final Player player2 = new Player(PlayerId.PLAYER2, playerType2);
+        final Board board1 = new Board(BOARD_SIZE);
+        final Board board2 = new Board(BOARD_SIZE);
 
         display.printMessage("Placement phase...");
-        placeShipsForPlayer(CurrentPlayer.PLAYER1);
-        placeShipsForPlayer(CurrentPlayer.PLAYER2);
+        placeShipsForPlayer(player1, board1);
+        placeShipsForPlayer(player2, board2);
 
         display.printMessage("Shooting phase...");
         boolean isRunning = true;
-        CurrentPlayer currentPlayer = null;
+        Player currentPlayer = null;
         while (isRunning) {
-            currentPlayer = switchPlayer(currentPlayer);
+            currentPlayer = (currentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player1 : player2;
             playRound(currentPlayer);
             if (hasWon(currentPlayer)) {
                 isRunning = false;
             }
         }
-        System.out.println(currentPlayer + " has won!");
     }
 
-    private void playRound(CurrentPlayer currentPlayer) {
+    private void playRound(Player player) {
         // TODO players make moves.
         display.printInputMessage("Shoot: ");
         String userInput = input.getInput();
         display.printMessage(userInput);
     }
 
-    private void placeShipsForPlayer(CurrentPlayer currentPlayer) {
-        PlayerType playerType = (currentPlayer == CurrentPlayer.PLAYER1) ? player1Type : player2Type;
-        Board board = null;
-        List<Ship> ships = new ArrayList<>();
+    private void placeShipsForPlayer(Player player, Board board) {
         ShipPlacementType placementType = getShipPlacementType();
-        if (playerType == PlayerType.PLAYER && placementType == ShipPlacementType.MANUAL) {
-            board = boardFactory.manualPlacement();
+        if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
                 display.printBoard(board.getOcean());
                 int shipLength = shipType.getLength();
@@ -77,23 +70,12 @@ public class Game {
                 Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength);
                 Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
                 Ship ship = new Ship(shipType, squares);
-                ships.add(ship);
+                player.addShip(ship);
                 board.addShip(ship);
             }
         } else {
             // TODO Implement random
             System.out.println("Random :)");
-        }
-        setShipsForPlayer(currentPlayer, board, ships);
-    }
-
-    private void setShipsForPlayer(CurrentPlayer currentPlayer, Board board, List<Ship> ships) {
-        if (currentPlayer == CurrentPlayer.PLAYER1) {
-            this.player1Board = board;
-            this.player1 = new Player(ships);
-        } else if (currentPlayer == CurrentPlayer.PLAYER2) {
-            this.player2Board = board;
-            this.player2 = new Player(ships);
         }
     }
 
@@ -191,31 +173,26 @@ public class Game {
         return false;
     }
 
-    private CurrentPlayer switchPlayer(CurrentPlayer currentPlayer) {
-        if (currentPlayer == CurrentPlayer.PLAYER1) {
-            return CurrentPlayer.PLAYER2;
-        } else {
-            return CurrentPlayer.PLAYER1;
-        }
-    }
-
-    private void setPlayerTypes() {
+    private PlayerType[] getPlayerTypes() {
+        PlayerType player1Type = null;
+        PlayerType player2Type = null;
         switch (gameMode) {
             case P_VS_P:
-                player1Type = PlayerType.PLAYER;
-                player2Type = PlayerType.PLAYER;
+                player1Type = PlayerType.HUMAN;
+                player2Type = PlayerType.HUMAN;
                 break;
             case P_VS_AI:
-                player1Type = PlayerType.PLAYER;
+                player1Type = PlayerType.HUMAN;
                 player2Type = PlayerType.AI;
                 break;
             case AI_VS_AI:
                 player1Type = PlayerType.AI;
                 player2Type = PlayerType.AI;
         }
+        return new PlayerType[]{player1Type, player2Type};
     }
 
-    private boolean hasWon(CurrentPlayer currentPlayer) {
+    private boolean hasWon(Player player) {
         //TODO return true if the game has ended by rules
         return false;
     }
