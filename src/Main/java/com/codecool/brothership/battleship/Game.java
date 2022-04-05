@@ -3,7 +3,6 @@ package com.codecool.brothership.battleship;
 import com.codecool.brothership.utilities.Display;
 import com.codecool.brothership.utilities.Input;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -65,10 +64,9 @@ public class Game {
         if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
                 display.printBoard(board.getOcean());
+                display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
-                ShipDirection shipDirection = getShipDirection();
-                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength);
-                Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
+                Square[] squares = getShipSquares(shipLength, player.getShips());
                 Ship ship = new Ship(shipType, squares);
                 player.addShip(ship);
                 board.addShip(ship);
@@ -79,10 +77,6 @@ public class Game {
         }
     }
 
-    private Square[] getShipSquares(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
-        // TODO Implement getting ShipSquares from arguments
-        return new Square[shipLength];
-    }
 
     private ShipPlacementType getShipPlacementType() {
         display.printMessage("Choose a placement type: manual or random?");
@@ -119,9 +113,10 @@ public class Game {
         return shipDirection;
     }
 
-    private Coordinate[] getShipCoordinates(ShipDirection shipDirection, int shipLength) {
+    private Square[] getShipSquares( int shipLength, List<Ship> ships) {
+        ShipDirection shipDirection = getShipDirection();
         display.printInputMessage("Choose a coordinate!");
-        Square[] coordinates = null;
+        Square[] squares = null;
         boolean isValid = false;
         while (!isValid) {
             display.printInputMessage("Coordinate: ");
@@ -130,47 +125,88 @@ public class Game {
                 display.printMessage("Invalid coordinate format");
                 continue;
             }
-            if (!input.isCoordinateInBoard(userInput, BOARD_SIZE)) {
-                display.printMessage("Coordinate is out of battlefield");
-                continue;
-            }
-            Coordinate coordinate = convertInputToCoordinate(userInput);
-            coordinates = createShipCoordinates(coordinate, shipDirection, shipLength);
-            if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
-                display.printMessage("Out of range!");
-            } else if (!isCoordinatesEmpty(coordinates)) {
-                display.printMessage("Fields not available!");
-            } else {
+            Coordinate starterCoordinate = convertInputToCoordinate(userInput);
+            System.out.println("x: " + starterCoordinate.getX() + "y: " + starterCoordinate.getY());
+            if (isCoordinatesValid(starterCoordinate, shipDirection, shipLength, ships)) {
+                squares = createShipSquares(starterCoordinate, shipDirection, shipLength);
                 isValid = true;
             }
+        }
+        return squares;
+    }
+
+    private Square[] createShipSquares(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
+        Square[] coordinates = new Square[shipLength];
+        int x = coordinate.getX();
+        int y = coordinate.getY();
+        boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
+        for (int i = 0; i < shipLength; i++) {
+            Square square = new Square(x, y, SquareStatus.SHIP);
+            if (isIncrementX){
+                x++;
+            } else {
+                y++;
+            }
+            coordinates[i] = square;
         }
         return coordinates;
     }
 
-    private Square[] createShipCoordinates(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
-        Square[] coordinates;
-        for (int i = 0; i < shipLength; i++) {
-
-        }
-        return new Square[0];
-    }
-
     private Coordinate convertInputToCoordinate(String userInput) {
         int asciiUpperLetterNum = 65;
-        int x = asciiUpperLetterNum - (int) userInput.toUpperCase().charAt(0);
-        int y = Integer.parseInt(userInput.substring(1));
+        int y =(int) userInput.toUpperCase().charAt(0) - asciiUpperLetterNum;
+        int x = Integer.parseInt(userInput.substring(1)) - 1;
         return new Coordinate(x, y);
     }
 
-    private boolean isCoordinatesEmpty(Coordinate[] coordinates) {
-        // TODO Implement ship placement validation
-        // Needs board(s) for checking availability
-        return false;
+    private boolean isCoordinatesValid(Coordinate starterCoordinate, ShipDirection shipDirection, int shipLength, List<Ship> ships) {
+        // TODO Implement In range check for singular and multiple fields
+        int starterX = starterCoordinate.getX();
+        int starterY = starterCoordinate.getY();
+        boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
+        for (int i = 0; i < shipLength; i++) {
+
+            if (!isCoordinateInBoard(starterX, starterY)) {
+                display.printMessage("Coordinate is out of battlefield");
+                return false;
+            }
+            for (Ship ship : ships) {
+                if (!isNeighbourSquaresEmpty(starterX, starterY, ship)) {
+                    display.printMessage("Fields not available!");
+                    return false;
+                }
+            }
+            if (isIncrementX){
+                starterX++;
+            } else {
+                starterY++;
+            }
+        }
+        return true;
     }
 
-    private boolean isCoordinatesInRange(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
-        // TODO Implement In range check for singular and multiple fields
-        return false;
+    private boolean isCoordinateInBoard(int starterX, int starterY) {
+        return starterX < BOARD_SIZE && starterY < BOARD_SIZE;
+    }
+
+    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
+        Square[] shipSquares = ship.getSquares();
+        for (Square shipSquare : shipSquares) {
+            int shipX = shipSquare.getX();
+            int shipY = shipSquare.getY();
+            boolean isLeftEmpty = (newCoordinateX - 1 != shipX || newCoordinateY!= shipY);
+            boolean isRightEmpty = (newCoordinateX + 1 != shipX || newCoordinateY != shipY);
+            boolean isTopEmpty = (newCoordinateX != shipX || newCoordinateY - 1 != shipY);
+            boolean isBottomEmpty = (newCoordinateX != shipX || newCoordinateY + 1 != shipY);
+            boolean isTopLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY - 1 != shipY);
+            boolean isTopRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY - 1 != shipY);
+            boolean isBottomLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY + 1 != shipY);
+            boolean isBottomRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY + 1 != shipY);
+            if (!isLeftEmpty || !isBottomLeftEmpty || !isBottomRightEmpty || !isRightEmpty || !isTopEmpty || !isBottomEmpty || !isTopLeftEmpty || !isTopRightEmpty) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private PlayerType[] getPlayerTypes() {

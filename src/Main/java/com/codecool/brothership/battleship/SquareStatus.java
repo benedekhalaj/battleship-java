@@ -2,7 +2,7 @@ package com.codecool.brothership.battleship;
 
 public enum SquareStatus {
     EMPTY("\uD83D\uDD35"),
-    SHIP("⬜"),
+    SHIP("\uD83C\uDFC0"),
     HIT("\uD83D\uDCA5"),
     SUNK("✖"),
     MISSED("⚫");

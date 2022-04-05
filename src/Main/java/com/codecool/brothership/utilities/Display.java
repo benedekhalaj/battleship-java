@@ -22,9 +22,9 @@ public class Display {
                 if (rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN) {
                     field = BIG_SEPARATOR;
                 } else if (rowIndex == COORDINATE_SIGN && colIndex != COORDINATE_SIGN) {
-                    field = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR ;
+                    field = (colIndex + 1  < 10) ? String.valueOf(colIndex + 1) + SMALL_SEPARATOR : String.valueOf((colIndex + 1));
                 } else if (colIndex == COORDINATE_SIGN && rowIndex != COORDINATE_SIGN) {
-                    field = (rowIndex + 1  < 10) ? (rowIndex + 1) + SMALL_SEPARATOR : String.valueOf((rowIndex + 1));
+                    field = Character.toString(UPPER_CHAR_NUM + rowIndex) + SMALL_SEPARATOR ;
                 } else {
                     field = board[rowIndex][colIndex].getStatus().getCharacter();
                 }
@@ -62,16 +62,16 @@ public class Display {
                     playerField = BIG_SEPARATOR;
                     enemyField = playerField;
                 } else if (characterCoordinatesLine) {
-                    String characterCoordinate = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
-                    playerField = characterCoordinate;
-                    enemyField = playerField;
-                } else if (numberCoordinatesLine) {
                     int colCoordinate = rowIndex + 1;
                     if (colCoordinate < 10) {
                         playerField = colCoordinate + SMALL_SEPARATOR;
                     } else {
                         playerField = String.valueOf(colCoordinate);
                     }
+                    enemyField = playerField;
+                } else if (numberCoordinatesLine) {
+                    String characterCoordinate = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
+                    playerField = characterCoordinate;
                     enemyField = playerField;
                 } else {
                     playerField = playerBoard[rowIndex][colIndex].getStatus().getCharacter();

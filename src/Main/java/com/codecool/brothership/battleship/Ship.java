@@ -2,18 +2,18 @@ package com.codecool.brothership.battleship;
 
 public class Ship {
     private final ShipType type;
-    private final Square[] coordinates;
+    private final Square[] squares;
 
-    public Ship(ShipType type, Square[] coordinates) {
+    public Ship(ShipType type, Square[] squares) {
         this.type = type;
-        this.coordinates = coordinates;
+        this.squares = squares;
     }
 
     public ShipType getType() {
         return type;
     }
 
-    public Square[] getCoordinates() {
-        return coordinates;
+    public Square[] getSquares() {
+        return squares;
     }
 }

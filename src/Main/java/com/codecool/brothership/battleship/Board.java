@@ -13,7 +13,7 @@ public class Board {
     }
 
     public void addShip(Ship ship) {
-        for (Square square : ship.getCoordinates()) {
+        for (Square square : ship.getSquares()) {
             int x = square.getX();
             int y = square.getY();
             ocean[y][x] = square;
