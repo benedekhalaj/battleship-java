@@ -10,7 +10,7 @@ public class Display {
     private static final String MEDIUM_SEPARATOR = "  ";
     private static final String BIG_SEPARATOR = "   ";
     private static final String BIG_PLAYER_SEPARATOR = BIG_SEPARATOR + "|" + BIG_SEPARATOR;
-    private static final String SMALL_PLAYER_SEPARATOR = SMALL_SEPARATOR + "|" + BIG_SEPARATOR;
+    private static final String SMALL_PLAYER_SEPARATOR = MEDIUM_SEPARATOR + "|" + BIG_SEPARATOR;
     private static final String NEW_LINE = "\n";
     private static final int COORDINATE_SIGN = -1;
 
@@ -48,14 +48,12 @@ public class Display {
             StringBuilder displayedRow = new StringBuilder();
             for (int x = COORDINATE_SIGN; x < boardSize; x++) {
                 String squareCharacter;
-                boolean topLeftCorner = (y == COORDINATE_SIGN && x == COORDINATE_SIGN);
-                boolean characterCoordinatesLine = (x == COORDINATE_SIGN);
-                boolean numberCoordinatesLine = (y == COORDINATE_SIGN);
-                if (topLeftCorner) {
-                    squareCharacter = MEDIUM_SEPARATOR;
-                } else if (numberCoordinatesLine) {
-                    squareCharacter = (x + 1 < 10) ? (x + 1) + SMALL_SEPARATOR : String.valueOf((x + 1));
-                } else if (characterCoordinatesLine) {
+                boolean numberCoordinatesRow = (y == COORDINATE_SIGN);
+                boolean characterCoordinatesPosition = (x == COORDINATE_SIGN);
+                if (numberCoordinatesRow) {
+                    displayedRow.append(makeNumberCoordinatesRow(boardSize));
+                    break;
+                } else if (characterCoordinatesPosition) {
                     squareCharacter = Character.toString(UPPER_CHAR_NUM + y) + SMALL_SEPARATOR;
                 } else {
                     if (isShipAtCoordinate(ships, y, x)) {
@@ -84,8 +82,8 @@ public class Display {
     public void printBattlefield(List<String> playerBoardRows, List<String> opponentBoardRows, int boardSize) {
         for (int y = COORDINATE_SIGN; y < playerBoardRows.size(); y++) {
             StringBuilder row = new StringBuilder();
-            boolean numberCoordinatesLine = (y == COORDINATE_SIGN);
-            if (numberCoordinatesLine) {
+            boolean numberCoordinatesRow = (y == COORDINATE_SIGN);
+            if (numberCoordinatesRow) {
                 String coordinatesRow = makeNumberCoordinatesRow(boardSize);
                 row.append(coordinatesRow).append(SMALL_PLAYER_SEPARATOR).append(coordinatesRow);
             } else {
