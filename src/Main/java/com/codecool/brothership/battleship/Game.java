@@ -135,7 +135,7 @@ public class Game {
                 continue;
             }
             Coordinate coordinate = convertInputToCoordinate(userInput);
-            coordinates = createShipCoordinates(coordinate, shipDirection, shipLength);
+            coordinates = createShipSquares(coordinate, shipDirection, shipLength);
             if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
                 display.printMessage("Out of range!");
             } else if (!isCoordinatesEmpty(coordinates)) {
@@ -147,12 +147,18 @@ public class Game {
         return coordinates;
     }
 
-    private Square[] createShipCoordinates(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
-        Square[] coordinates;
+    private Square[] createShipSquares(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
+        Square[] coordinates = new Square[shipLength];
+        int x = coordinate.getX();
+        int y = coordinate.getY();
+        boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
         for (int i = 0; i < shipLength; i++) {
-
+            if (isIncrementX){x++;}
+            else {y++;}
+            Square square = new Square(x, y, SquareStatus.SHIP);
+            coordinates[i] = square;
         }
-        return new Square[0];
+        return coordinates;
     }
 
     private Coordinate convertInputToCoordinate(String userInput) {
