@@ -3,6 +3,7 @@ package com.codecool.brothership.battleship;
 import com.codecool.brothership.utilities.Display;
 import com.codecool.brothership.utilities.Input;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -33,12 +34,10 @@ public class Game {
         final PlayerType playerType2 = playerTypes[1];
         final Player player1 = new Player(PlayerId.PLAYER1, playerType1);
         final Player player2 = new Player(PlayerId.PLAYER2, playerType2);
-        final Board board1 = new Board(BOARD_SIZE);
-        final Board board2 = new Board(BOARD_SIZE);
 
         display.printMessage("Placement phase...");
-        placeShipsForPlayer(player1, board1);
-        placeShipsForPlayer(player2, board2);
+        placeShipsForPlayer(player1);
+        placeShipsForPlayer(player2);
 
         display.printMessage("Shooting phase...");
         boolean isRunning = true;
@@ -59,22 +58,23 @@ public class Game {
         display.printMessage(userInput);
     }
 
-    private void placeShipsForPlayer(Player player, Board board) {
+    private void placeShipsForPlayer(Player player) {
+        List<Ship> ships = new ArrayList<>();
         ShipPlacementType placementType = getShipPlacementType();
         if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
-                display.printBoard(board.getOcean());
+                // TODO print board for ship placement
                 display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
-                Square[] squares = getShipSquares(shipLength, player.getShips());
+                ShipSquare[] squares = getShipSquares(shipLength, player.getShips());
                 Ship ship = new Ship(shipType, squares);
-                player.addShip(ship);
-                board.addShip(ship);
+                ships.add(ship);
             }
         } else {
             // TODO Implement random
             System.out.println("Random :)");
         }
+        player.createBoard(BOARD_SIZE, ships);
     }
 
 
@@ -113,20 +113,19 @@ public class Game {
         return shipDirection;
     }
 
-    private Square[] getShipSquares( int shipLength, List<Ship> ships) {
+    private ShipSquare[] getShipSquares( int shipLength, List<Ship> ships) {
         ShipDirection shipDirection = getShipDirection();
         display.printInputMessage("Choose a coordinate!");
-        Square[] squares = null;
+        ShipSquare[] squares = null;
         boolean isValid = false;
         while (!isValid) {
-            display.printInputMessage("Coordinate: ");
+            display.printMessage("Coordinate: ");
             String userInput = input.getInput();
             if (!input.isCoordinatesValid(userInput)) {
                 display.printMessage("Invalid coordinate format");
                 continue;
             }
             Coordinate starterCoordinate = convertInputToCoordinate(userInput);
-            System.out.println("x: " + starterCoordinate.getX() + "y: " + starterCoordinate.getY());
             if (isCoordinatesValid(starterCoordinate, shipDirection, shipLength, ships)) {
                 squares = createShipSquares(starterCoordinate, shipDirection, shipLength);
                 isValid = true;
@@ -135,21 +134,21 @@ public class Game {
         return squares;
     }
 
-    private Square[] createShipSquares(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
-        Square[] coordinates = new Square[shipLength];
+    private ShipSquare[] createShipSquares(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
+        ShipSquare[] shipSquares = new ShipSquare[shipLength];
         int x = coordinate.getX();
         int y = coordinate.getY();
         boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
         for (int i = 0; i < shipLength; i++) {
-            Square square = new Square(x, y, SquareStatus.SHIP);
+            ShipSquare square = new ShipSquare(x, y);
             if (isIncrementX){
                 x++;
             } else {
                 y++;
             }
-            coordinates[i] = square;
+            shipSquares[i] = square;
         }
-        return coordinates;
+        return shipSquares;
     }
 
     private Coordinate convertInputToCoordinate(String userInput) {
