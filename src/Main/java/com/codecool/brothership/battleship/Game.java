@@ -67,7 +67,7 @@ public class Game {
                 display.printBoard(board.getOcean());
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
-                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength, ships);
+                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength, player.getShips());
                 Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
                 Ship ship = new Ship(shipType, squares);
                 player.addShip(ship);
