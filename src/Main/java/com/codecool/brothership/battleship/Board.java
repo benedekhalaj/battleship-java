@@ -49,7 +49,7 @@ public class Board {
                 if (squareCharacter == null) {
                     squareCharacter = getWaterSquareCharacter(x, y);
                 }
-                boardRow.append(squareCharacter).append(SMALL_SEPARATOR);
+                boardRow.append(squareCharacter);
             }
             boardRows.add(boardRow.toString());
         }

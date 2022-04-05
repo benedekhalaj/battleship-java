@@ -42,17 +42,21 @@ public class Game {
         display.printMessage("Shooting phase...");
         boolean isRunning = true;
         Player currentPlayer = null;
+        Player opponent = null;
+
         while (isRunning) {
             currentPlayer = (currentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player1 : player2;
-            playRound(currentPlayer);
+            opponent = (opponent == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player2 : player1;
+            playRound(currentPlayer, opponent);
             if (hasWon(currentPlayer)) {
                 isRunning = false;
             }
         }
     }
 
-    private void playRound(Player player) {
+    private void playRound(Player player, Player opponent) {
         // TODO players make moves.
+        display.printBattlefield(player.getBoardRows(), opponent.getBoardRows(), BOARD_SIZE);
         display.printInputMessage("Shoot: ");
         String userInput = input.getInput();
         display.printMessage(userInput);
@@ -64,7 +68,6 @@ public class Game {
         if (player.getType() == PlayerType.HUMAN && placementType == ShipPlacementType.MANUAL) {
             for (ShipType shipType : ShipType.values()) {
                 display.printPlacementBoard(ships, BOARD_SIZE);
-                // TODO print board for ship placement
                 display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
                 ShipSquare[] squares = getShipSquares(shipLength, player.getShips());
