@@ -67,7 +67,7 @@ public class Game {
                 display.printBoard(board.getOcean());
                 int shipLength = shipType.getLength();
                 ShipDirection shipDirection = getShipDirection();
-                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength);
+                Coordinate[] coordinates = getShipCoordinates(shipDirection, shipLength, ships);
                 Square[] squares = getShipSquares(coordinates, shipDirection, shipLength);
                 Ship ship = new Ship(shipType, squares);
                 player.addShip(ship);
@@ -119,9 +119,9 @@ public class Game {
         return shipDirection;
     }
 
-    private Coordinate[] getShipCoordinates(ShipDirection shipDirection, int shipLength) {
+    private Coordinate[] getShipCoordinates(ShipDirection shipDirection, int shipLength, List<Ship> ships) {
         display.printInputMessage("Choose a coordinate!");
-        Square[] coordinates = null;
+        Square[] squares = null;
         boolean isValid = false;
         while (!isValid) {
             display.printInputMessage("Coordinate: ");
@@ -130,21 +130,13 @@ public class Game {
                 display.printMessage("Invalid coordinate format");
                 continue;
             }
-            if (!input.isCoordinateInBoard(userInput, BOARD_SIZE)) {
-                display.printMessage("Coordinate is out of battlefield");
-                continue;
-            }
-            Coordinate coordinate = convertInputToCoordinate(userInput);
-            coordinates = createShipSquares(coordinate, shipDirection, shipLength);
-            if (!isCoordinatesInRange(coordinates, shipDirection, shipLength)) {
-                display.printMessage("Out of range!");
-            } else if (!isCoordinatesEmpty(coordinates)) {
-                display.printMessage("Fields not available!");
-            } else {
+            Coordinate starterCoordinate = convertInputToCoordinate(userInput);
+            if (isCoordinatesValid(starterCoordinate, shipDirection, shipLength, ships)) {
+                squares = createShipSquares(starterCoordinate, shipDirection, shipLength);
                 isValid = true;
             }
         }
-        return coordinates;
+        return squares;
     }
 
     private Square[] createShipSquares(Coordinate coordinate, ShipDirection shipDirection, int shipLength) {
@@ -153,8 +145,11 @@ public class Game {
         int y = coordinate.getY();
         boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
         for (int i = 0; i < shipLength; i++) {
-            if (isIncrementX){x++;}
-            else {y++;}
+            if (isIncrementX){
+                x++;
+            } else {
+                y++;
+            }
             Square square = new Square(x, y, SquareStatus.SHIP);
             coordinates[i] = square;
         }
@@ -168,15 +163,37 @@ public class Game {
         return new Coordinate(x, y);
     }
 
-    private boolean isCoordinatesEmpty(Coordinate[] coordinates) {
-        // TODO Implement ship placement validation
-        // Needs board(s) for checking availability
-        return false;
+    private boolean isCoordinatesValid(Coordinate starterCoordinate, ShipDirection shipDirection, int shipLength, List<Ship> ships) {
+        // TODO Implement In range check for singular and multiple fields
+        int starterX = starterCoordinate.getX();
+        int starterY = starterCoordinate.getY();
+        boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
+        for (int i = 0; i < shipLength; i++) {
+            if (isIncrementX){
+                starterX++;
+            } else {
+                starterY++;
+            }
+            if (isCoordinateInBoard(starterX, starterY)) {
+                display.printMessage("Coordinate is out of battlefield");
+                return false;
+            }
+            for (Ship ship : ships) {
+                if (!isNeighbourSquaresEmpty(starterX, starterY)) {
+                    display.printMessage("Fields not available!");
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    private boolean isCoordinatesInRange(Coordinate[] coordinates, ShipDirection shipDirection, int shipLength) {
-        // TODO Implement In range check for singular and multiple fields
-        return false;
+    private boolean isCoordinateInBoard(int starterX, int starterY) {
+        return starterX >= BOARD_SIZE || starterY >= BOARD_SIZE;
+    }
+
+    private boolean isNeighbourSquaresEmpty(int starterX, int starterY) {
+        return true;
     }
 
     private PlayerType[] getPlayerTypes() {

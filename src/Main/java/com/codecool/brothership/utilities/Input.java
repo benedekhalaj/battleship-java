@@ -72,16 +72,4 @@ public class Input {
         Matcher matcher = pattern.matcher(userInput);
         return matcher.find();
     }
-
-    public boolean isCoordinateInBoard(String userInput, int range) {
-        int asciiUpperLetterNum = 65;
-        int asciiLowerLetterNum = 97;
-        char maxUpperCoordinateChar = (char) (asciiUpperLetterNum + range - 1);
-        char maxLowerCoordinateChar = (char) (asciiLowerLetterNum + range - 1);
-        String numberOfDigits = (range > 9) ? "{1,2}" : "";
-        String regex = "^[a-" + maxLowerCoordinateChar + "A-"+ maxUpperCoordinateChar + "][0-9]" + numberOfDigits + "$";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(userInput);
-        return matcher.find();
-    }
 }
