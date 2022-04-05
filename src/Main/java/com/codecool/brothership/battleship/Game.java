@@ -42,12 +42,11 @@ public class Game {
         display.printMessage("Shooting phase...");
         boolean isRunning = true;
         Player currentPlayer = null;
-        Player opponent = null;
-
+        Player opponentPlayer = null;
         while (isRunning) {
             currentPlayer = (currentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER2) ? player1 : player2;
-            opponent = (opponent == null || currentPlayer.getId() == PlayerId.PLAYER1) ? player2 : player1;
-            playRound(currentPlayer, opponent);
+            opponentPlayer = (opponentPlayer == null || currentPlayer.getId() == PlayerId.PLAYER1) ? player2 : player1;
+            playRound(currentPlayer, opponentPlayer);
             if (hasWon(currentPlayer)) {
                 isRunning = false;
             }
@@ -56,10 +55,33 @@ public class Game {
 
     private void playRound(Player player, Player opponent) {
         // TODO players make moves.
+        // get shot input CHECK
+        // validate shot input (regex, in range)
+        // ask opponent about shot status (HIT, MISSED, Already shot!);
         display.printBattlefield(player.getBoardRows(), opponent.getBoardRows(), BOARD_SIZE);
-        display.printInputMessage("Shoot: ");
-        String userInput = input.getInput();
-        display.printMessage(userInput);
+        Coordinate shotCoordinate = getShotCoordinate();
+
+    }
+
+    private Coordinate getShotCoordinate() {
+        display.printMessage("Make a shot!");
+        Coordinate coordinate = null;
+        boolean isValid = false;
+        while (!isValid) {
+            display.printInputMessage("Shot coordinate: ");
+            String userInput = input.getInput();
+            if (!input.isCoordinatesFormatValid(userInput)) {
+                display.printMessage("Invalid input!");
+                continue;
+            }
+            coordinate = convertInputToCoordinate(userInput);
+            if (!isCoordinateInBoard(coordinate.getX(), coordinate.getY())) {
+                display.printMessage("Coordinate out of battlefield!");
+            } else {
+                isValid = true;
+            }
+        }
+        return coordinate;
     }
 
     private void placeShipsForPlayer(Player player) {
@@ -80,7 +102,6 @@ public class Game {
         }
         player.createBoard(BOARD_SIZE, ships);
     }
-
 
     private ShipPlacementType getShipPlacementType() {
         display.printMessage("Choose a placement type: manual or random?");
@@ -125,7 +146,7 @@ public class Game {
         while (!isValid) {
             display.printMessage("Coordinate: ");
             String userInput = input.getInput();
-            if (!input.isCoordinatesValid(userInput)) {
+            if (!input.isCoordinatesFormatValid(userInput)) {
                 display.printMessage("Invalid coordinate format");
                 continue;
             }
@@ -163,7 +184,6 @@ public class Game {
     }
 
     private boolean isCoordinatesValid(Coordinate starterCoordinate, ShipDirection shipDirection, int shipLength, List<Ship> ships) {
-        // TODO Implement In range check for singular and multiple fields
         int starterX = starterCoordinate.getX();
         int starterY = starterCoordinate.getY();
         boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
@@ -189,7 +209,7 @@ public class Game {
     }
 
     private boolean isCoordinateInBoard(int starterX, int starterY) {
-        return starterX < BOARD_SIZE && starterY < BOARD_SIZE;
+        return starterX < BOARD_SIZE && starterY < BOARD_SIZE && starterX > 0 && starterY > 0;
     }
 
     private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {

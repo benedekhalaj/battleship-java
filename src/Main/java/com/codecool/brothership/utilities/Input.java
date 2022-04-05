@@ -65,8 +65,7 @@ public class Input {
         return null;
     }
 
-    public boolean isCoordinatesValid(String userInput) {
-        // TODO Implement Input Validation Regex
+    public boolean isCoordinatesFormatValid(String userInput) {
         String regex = "^[a-zA-Z][0-9]{1,2}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(userInput);
