@@ -174,7 +174,7 @@ public class Game {
                 return false;
             }
             for (Ship ship : ships) {
-                if (!isNeighbourSquaresEmpty(starterX, starterY,  shipDirection, ship)) {
+                if (!isNeighbourSquaresEmpty(starterX, starterY, ship)) {
                     display.printMessage("Fields not available!");
                     return false;
                 }
@@ -187,7 +187,7 @@ public class Game {
         return starterX >= BOARD_SIZE || starterY >= BOARD_SIZE;
     }
 
-    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, ShipDirection shipDirection, Ship ship) {
+    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
         Square[] shipSquares = ship.getSquares();
         for (Square shipSquare : shipSquares) {
             int shipX = shipSquare.getX();
