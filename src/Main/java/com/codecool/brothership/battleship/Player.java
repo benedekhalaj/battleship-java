@@ -25,6 +25,15 @@ public class Player {
         return type;
     }
 
+    public ShotStatus getShotStatus(Coordinate shotCoordinate) {
+        return board.getShotStatus(shotCoordinate);
+    }
+
+    public Square shoot() {
+        // TODO returns valid shot square
+        return new Square(0, 0);
+    }
+
     public boolean isAlive() {
         // TODO return true if player has ship, what has not sunk yet
         return true;
