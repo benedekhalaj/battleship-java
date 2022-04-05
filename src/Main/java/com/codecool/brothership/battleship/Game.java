@@ -66,8 +66,7 @@ public class Game {
                 display.printBoard(board.getOcean());
                 display.printMessage("Ship length: " + shipType.getLength());
                 int shipLength = shipType.getLength();
-                ShipDirection shipDirection = getShipDirection();
-                Square[] squares = getShipSquares(shipDirection, shipLength, player.getShips());
+                Square[] squares = getShipSquares(shipLength, player.getShips());
                 Ship ship = new Ship(shipType, squares);
                 player.addShip(ship);
                 board.addShip(ship);
@@ -114,7 +113,8 @@ public class Game {
         return shipDirection;
     }
 
-    private Square[] getShipSquares(ShipDirection shipDirection, int shipLength, List<Ship> ships) {
+    private Square[] getShipSquares( int shipLength, List<Ship> ships) {
+        ShipDirection shipDirection = getShipDirection();
         display.printInputMessage("Choose a coordinate!");
         Square[] squares = null;
         boolean isValid = false;
@@ -140,12 +140,12 @@ public class Game {
         int y = coordinate.getY();
         boolean isIncrementX = shipDirection.getDirection().equals(ShipDirection.HORIZONTAL.getDirection());
         for (int i = 0; i < shipLength; i++) {
+            Square square = new Square(x, y, SquareStatus.SHIP);
             if (isIncrementX){
                 x++;
             } else {
                 y++;
             }
-            Square square = new Square(x, y, SquareStatus.SHIP);
             coordinates[i] = square;
         }
         return coordinates;
@@ -153,8 +153,8 @@ public class Game {
 
     private Coordinate convertInputToCoordinate(String userInput) {
         int asciiUpperLetterNum = 65;
-        int x = asciiUpperLetterNum - (int) userInput.toUpperCase().charAt(0);
-        int y = Integer.parseInt(userInput.substring(1)) - 1;
+        int y =(int) userInput.toUpperCase().charAt(0) - asciiUpperLetterNum;
+        int x = Integer.parseInt(userInput.substring(1)) - 1;
         return new Coordinate(x, y);
     }
 
@@ -174,7 +174,7 @@ public class Game {
                 return false;
             }
             for (Ship ship : ships) {
-                if (!isNeighbourSquaresEmpty(starterX, starterY, ship)) {
+                if (!isNeighbourSquaresEmpty(starterX, starterY,  shipDirection, ship)) {
                     display.printMessage("Fields not available!");
                     return false;
                 }
@@ -187,12 +187,20 @@ public class Game {
         return starterX >= BOARD_SIZE || starterY >= BOARD_SIZE;
     }
 
-    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
+    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, ShipDirection shipDirection, Ship ship) {
         Square[] shipSquares = ship.getSquares();
         for (Square shipSquare : shipSquares) {
             int shipX = shipSquare.getX();
             int shipY = shipSquare.getY();
-            if (newCoordinateX == shipX || newCoordinateY == shipY) {
+            boolean isLeftEmpty = (newCoordinateX - 1 != shipX || newCoordinateY!= shipY);
+            boolean isRightEmpty = (newCoordinateX + 1 != shipX || newCoordinateY != shipY);
+            boolean isTopEmpty = (newCoordinateX != shipX || newCoordinateY - 1 != shipY);
+            boolean isBottomEmpty = (newCoordinateX != shipX || newCoordinateY + 1 != shipY);
+            boolean isTopLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY - 1 != shipY);
+            boolean isTopRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY - 1 != shipY);
+            boolean isBottomLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY + 1 != shipY);
+            boolean isBottomRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY + 1 != shipY);
+            if (!isLeftEmpty || !isBottomLeftEmpty || !isBottomRightEmpty || !isRightEmpty || !isTopEmpty || !isBottomEmpty || !isTopLeftEmpty || !isTopRightEmpty) {
                 return false;
             }
         }
