@@ -19,4 +19,14 @@ public class Display {
     public void printResult() {
         // TODO prints the game result
     }
+
+    public void printInputMessage(String message) {
+        // Prints message for input without a newline.
+        System.out.print(message);
+    }
+
+    public void printMessage(String message) {
+        // Prints message with newline.
+        System.out.println(message);
+    }
 }
