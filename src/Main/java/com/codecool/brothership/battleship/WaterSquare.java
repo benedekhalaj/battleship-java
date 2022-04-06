@@ -8,6 +8,11 @@ public class WaterSquare extends Square {
         this.status = WaterSquareStatus.EMPTY;
     }
 
+    public WaterSquare(int x, int y, WaterSquareStatus status) {
+        super(x, y);
+        this.status = status;
+    }
+
     public void changeStatus(WaterSquareStatus squareStatus) {
         this.status = squareStatus;
     }
