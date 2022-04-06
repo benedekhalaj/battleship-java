@@ -29,10 +29,23 @@ public class BoardFactory {
                         int yCord = coordinate.getY();
                         boolean isCoordinateOccupied = (xCord == shipSquare.getX() && yCord == shipSquare.getY());
                         if (isCoordinateOccupied) {
-                            coordinates[y][x] = null;
+                            removeShipAndNeighbours(coordinates, x, y);
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void removeShipAndNeighbours(Coordinate[][] coordinates, int ownX, int ownY) {
+        int firstNeighbour = -1;
+        int lastNeighbour = 2;
+        for (int neighbourY = firstNeighbour; neighbourY < lastNeighbour; neighbourY++) {
+            for (int neighbourX = firstNeighbour; neighbourX < lastNeighbour; neighbourX++) {
+                int x = ownX + neighbourX;
+                int y = ownY + neighbourY;
+                boolean isShipOnBoard = (x < coordinates.length && y < coordinates.length && x >= 0 && y >= 0);
+                if (isShipOnBoard) coordinates[y][x] = null;
             }
         }
     }
