@@ -35,13 +35,19 @@ public class Display {
         // TODO prints the board(ocean)
     }
 
-    public void printMenu() {
+    public void printGameModes() {
         System.out.println("""
                 Select game mode:
                 1: Player VS Player
                 2: Player VS AI
                 3: AI VS AI""");
-        // TODO Prints menu
+    }
+
+    public void printMenu() {
+        System.out.println("""
+                Welcome to BrotherShip! Select an option:
+                1: Play
+                0: Exit""");
     }
 
     public void printGameplay(Square[][] playerBoard, Square[][] enemyBoard) {
