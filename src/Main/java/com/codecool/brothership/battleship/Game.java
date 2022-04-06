@@ -31,8 +31,8 @@ public class Game {
         final PlayerType[] playerTypes = getPlayerTypes();
         final PlayerType playerType1 = playerTypes[0];
         final PlayerType playerType2 = playerTypes[1];
-        final Player player1 = new Player(PlayerId.PLAYER1, playerType1);
-        final Player player2 = new Player(PlayerId.PLAYER2, playerType2);
+        final Player player1 = createPlayer(PlayerId.PLAYER1, playerType1);
+        final Player player2 = createPlayer(PlayerId.PLAYER2, playerType2);
 
         display.printMessage("Placement phase...");
         placeShipsForPlayer(player1);
@@ -52,6 +52,14 @@ public class Game {
             }
         }
         display.printMessage(currentPlayer.getId().toString() + " has won the game!");
+    }
+
+    private Player createPlayer(PlayerId playerId, PlayerType playerType) {
+        if (playerType == PlayerType.HUMAN) {
+            return new Player(playerId, playerType);
+        } else {
+            return new ComputerPlayer(playerId, aiType);
+        }
     }
 
     private void playRound(Player player, Player opponent) {
