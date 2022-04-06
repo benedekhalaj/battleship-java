@@ -14,6 +14,13 @@ public class Board {
         this.ocean = boardFactory.manualPlacement(size, ships);
     }
 
+    public Board(int boardSize) {
+        this.size = boardSize;
+        BoardFactory boardFactory = new BoardFactory();
+        this.ships = boardFactory.randomPlacement(this.size);
+        this.ocean = boardFactory.manualPlacement(this.size, this.ships);
+    }
+
 
     public List<String> getBoardRows() {
         List<String> boardRows = new ArrayList<>();
@@ -108,5 +115,8 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public void randomPlacement() {
     }
 }

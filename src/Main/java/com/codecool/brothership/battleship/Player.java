@@ -1,6 +1,5 @@
 package com.codecool.brothership.battleship;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
@@ -35,6 +34,10 @@ public class Player {
 
     public List<String> getBoardRows() {
         return board.getBoardRows();
+    }
+
+    public void createRandomBoard(int boardSize) {
+        this.board = new Board(boardSize);
     }
 
     public Coordinate shoot() {

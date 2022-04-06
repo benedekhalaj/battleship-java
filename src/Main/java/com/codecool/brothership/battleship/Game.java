@@ -2,6 +2,7 @@ package com.codecool.brothership.battleship;
 
 import com.codecool.brothership.utilities.Display;
 import com.codecool.brothership.utilities.Input;
+import com.codecool.brothership.utilities.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,21 +110,10 @@ public class Game {
                 Ship ship = new Ship(shipType, squares);
                 ships.add(ship);
             }
+            player.createBoard(BOARD_SIZE, ships);
         } else {
-            // TODO Random placement
-            // THIS IS DUMMY DATA FOR TESTING PURPOSES
-            ships.add(new Ship(ShipType.DESTROYER,
-                    createShipSquares(new Coordinate(0, 0), ShipDirection.VERTICAL, 2)));
-            ships.add(new Ship(ShipType.SUBMARINE,
-                    createShipSquares(new Coordinate(2, 0), ShipDirection.VERTICAL, 3)));
-            ships.add(new Ship(ShipType.CRUISER,
-                    createShipSquares(new Coordinate(4, 0), ShipDirection.VERTICAL, 3)));
-            ships.add(new Ship(ShipType.BATTLESHIP,
-                    createShipSquares(new Coordinate(6, 0), ShipDirection.VERTICAL, 4)));
-            ships.add(new Ship(ShipType.CARRIER,
-                    createShipSquares(new Coordinate(8, 0), ShipDirection.VERTICAL, 5)));
+            player.createRandomBoard(BOARD_SIZE);
         }
-        player.createBoard(BOARD_SIZE, ships);
     }
 
     private ShipPlacementType getShipPlacementType() {
@@ -217,7 +207,7 @@ public class Game {
                 return false;
             }
             for (Ship ship : ships) {
-                if (!isNeighbourSquaresEmpty(starterX, starterY, ship)) {
+                if (!Validator.isNeighbourSquaresEmpty(starterX, starterY, ship)) {
                     display.printMessage("Fields not available!");
                     return false;
                 }
@@ -233,26 +223,6 @@ public class Game {
 
     private boolean isCoordinateInBoard(int starterX, int starterY) {
         return starterX < BOARD_SIZE && starterY < BOARD_SIZE && starterX >= 0 && starterY >= 0;
-    }
-
-    private boolean isNeighbourSquaresEmpty(int newCoordinateX, int newCoordinateY, Ship ship) {
-        ShipSquare[] shipSquares = ship.getSquares();
-        for (Square shipSquare : shipSquares) {
-            int shipX = shipSquare.getX();
-            int shipY = shipSquare.getY();
-            boolean isLeftEmpty = (newCoordinateX - 1 != shipX || newCoordinateY!= shipY);
-            boolean isRightEmpty = (newCoordinateX + 1 != shipX || newCoordinateY != shipY);
-            boolean isTopEmpty = (newCoordinateX != shipX || newCoordinateY - 1 != shipY);
-            boolean isBottomEmpty = (newCoordinateX != shipX || newCoordinateY + 1 != shipY);
-            boolean isTopLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY - 1 != shipY);
-            boolean isTopRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY - 1 != shipY);
-            boolean isBottomLeftEmpty = (newCoordinateX  - 1 != shipX || newCoordinateY + 1 != shipY);
-            boolean isBottomRightEmpty = (newCoordinateX  + 1 != shipX || newCoordinateY + 1 != shipY);
-            if (!isLeftEmpty || !isBottomLeftEmpty || !isBottomRightEmpty || !isRightEmpty || !isTopEmpty || !isBottomEmpty || !isTopLeftEmpty || !isTopRightEmpty) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private PlayerType[] getPlayerTypes() {
