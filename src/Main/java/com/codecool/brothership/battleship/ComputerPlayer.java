@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ComputerPlayer extends Player{
+public class ComputerPlayer extends Player {
 
     private final AiType aiType;
     private final List<Coordinate> possibleShots = new ArrayList<>();
@@ -13,6 +13,7 @@ public class ComputerPlayer extends Player{
     public ComputerPlayer(PlayerId id, AiType aiType) {
         super(id, PlayerType.AI);
         this.aiType = aiType;
+        createPossibleShots();
     }
 
     private void createPossibleShots() {
@@ -28,6 +29,7 @@ public class ComputerPlayer extends Player{
         return aiType;
     }
 
+    @Override
     public Coordinate shoot() {
         int randomChoice = random.nextInt(possibleShots.size());
         Coordinate randomCoordinate = possibleShots.get(randomChoice);

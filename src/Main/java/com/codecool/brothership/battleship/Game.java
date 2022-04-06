@@ -67,7 +67,7 @@ public class Game {
         boolean isValid = false;
         while (!isValid) {
             display.printBattlefield(player.getBoardRows(), opponent.getBoardRows(), BOARD_SIZE);
-            Coordinate shotCoordinate = getShotCoordinate();
+            Coordinate shotCoordinate = (player.getType() == PlayerType.HUMAN) ? getShotCoordinate(): player.shoot();
             ShotStatus shotStatus = opponent.getShotStatus(shotCoordinate);
             display.printMessage(shotStatus.getMessage());
             if (shotStatus != ShotStatus.INVALID) {

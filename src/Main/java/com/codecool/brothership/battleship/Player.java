@@ -36,4 +36,9 @@ public class Player {
     public List<String> getBoardRows() {
         return board.getBoardRows();
     }
+
+    public Coordinate shoot() {
+        // Human player not uses
+        return null;
+    }
 }
