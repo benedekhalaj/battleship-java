@@ -8,17 +8,20 @@ public class BoardFactory {
         return new Board[rows][cols];
     }
 
-    public List<WaterSquare> manualPlacement(int size, List<Ship> ships) {
-        List<WaterSquare> ocean = new ArrayList<>();
+    public WaterSquare[][] manualPlacement(int size, List<Ship> ships) {
+        WaterSquare[][] ocean = new WaterSquare[size][size];
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
                 if (isSquareEmpty(x, y, ships)) {
-                    ocean.add(new WaterSquare(x, y));
+                    ocean[y][x] = new WaterSquare(x, y);
+                } else {
+                    ocean[y][x] = new WaterSquare(x, y, WaterSquareStatus.SHIP_PLACE);
                 }
             }
         }
         return ocean;
     }
+
     private boolean isSquareEmpty(int x, int y, List<Ship> ships) {
         for (Ship ship : ships) {
             for (Square square : ship.getSquares()) {

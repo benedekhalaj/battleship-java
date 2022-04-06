@@ -3,9 +3,8 @@ package com.codecool.brothership.battleship;
 import java.util.*;
 
 public class Board {
-    private final List<WaterSquare> ocean;
+    private final WaterSquare[][] ocean;
     private final List<Ship> ships;
-    private final HashMap<Coordinate, HashMap<SquareType, Integer>> boardMap;
     private final int size;
 
     public Board(int size, List<Ship> ships) {
@@ -13,44 +12,34 @@ public class Board {
         this.size = size;
         BoardFactory boardFactory = new BoardFactory();
         this.ocean = boardFactory.manualPlacement(size, ships);
-        this.boardMap = boardFactory.makeBoardMap(size, ships);
     }
 
 
     public List<String> getBoardRows() {
         List<String> boardRows = new ArrayList<>();
-        for (int y = 0; y < size; y++) {
-            StringBuilder boardRow = new StringBuilder();
-            for (int x = 0; x < size; x++) {
-                String squareCharacter;
-                squareCharacter = getSquareCharacter(y, x);
-                boardRow.append(squareCharacter);
+        for (int y = 0; y < this.ocean.length; y++) {
+            StringBuilder rowString = new StringBuilder();
+            for (int x = 0; x < this.ocean[y].length; x++) {
+                String squareCharacterString;
+                WaterSquare waterSquare = ocean[y][x];
+                if (waterSquare.getStatus().equals(WaterSquareStatus.EMPTY)) {
+                    squareCharacterString = waterSquare.getStatus().getCharacter();
+                } else {
+                    squareCharacterString = getShipSquareCharacter(x, y);
+                }
+                rowString.append(squareCharacterString);
             }
-            boardRows.add(boardRow.toString());
+            boardRows.add(rowString.toString());
         }
         return boardRows;
     }
 
-    private String getSquareCharacter(int y, int x) {
-        String squareCharacter;
-        Coordinate coordinate = new Coordinate(x, y);
-        HashMap<SquareType, Integer> coordinateInformation = boardMap.get(coordinate);
-        boolean isOcean = coordinateInformation.containsKey(SquareType.OCEAN);
-        if (isOcean) {
-            int index = coordinateInformation.get(SquareType.OCEAN);
-            WaterSquare waterSquare = this.ocean.get(index);
-            squareCharacter = waterSquare.getStatus().getCharacter();
-        } else {
-            int index = coordinateInformation.get(SquareType.SHIP);
-            squareCharacter = getShipSquareCharacter(x, y, this.ships.get(index));
-        }
-        return squareCharacter;
-    }
-
-    private String getShipSquareCharacter(int x, int y, Ship ship) {
-        for (ShipSquare square : ship.getSquares()) {
-            if (square.getX() == x && square.getY() == y) {
-                return square.getStatus().getCharacter();
+    private String getShipSquareCharacter(int x, int y) {
+        for (Ship ship : this.ships) {
+            for (ShipSquare square : ship.getSquares()) {
+                if (square.getX() == x && square.getY() == y) {
+                    return square.getStatus().getCharacter();
+                }
             }
         }
         return null;
@@ -77,13 +66,15 @@ public class Board {
                 }
             }
         }
-        for (WaterSquare waterSquare : ocean) {
-            if (coordinate.getX() == waterSquare.getX() && coordinate.getY() == waterSquare.getY()) {
-                if (waterSquare.getStatus() == WaterSquareStatus.EMPTY) {
-                    waterSquare.changeStatus(WaterSquareStatus.MISSED);
-                    return ShotStatus.MISS;
-                } else {
-                    return ShotStatus.INVALID;
+        for (WaterSquare[] waterSquares : ocean) {
+            for (WaterSquare waterSquare : waterSquares) {
+                if (coordinate.getX() == waterSquare.getX() && coordinate.getY() == waterSquare.getY()) {
+                    if (waterSquare.getStatus() == WaterSquareStatus.EMPTY) {
+                        waterSquare.changeStatus(WaterSquareStatus.MISSED);
+                        return ShotStatus.MISS;
+                    } else {
+                        return ShotStatus.INVALID;
+                    }
                 }
             }
         }
