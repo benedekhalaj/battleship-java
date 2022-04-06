@@ -1,5 +1,7 @@
 package com.codecool.brothership.battleship;
 
+import com.codecool.brothership.utilities.RandomHelper;
+
 import java.util.*;
 
 public class Board {
@@ -12,6 +14,13 @@ public class Board {
         this.size = size;
         BoardFactory boardFactory = new BoardFactory();
         this.ocean = boardFactory.manualPlacement(size, ships);
+    }
+
+    public Board(int boardSize) {
+        this.size = boardSize;
+        BoardFactory boardFactory = new BoardFactory();
+        this.ships = boardFactory.randomPlacement(this.size);
+        this.ocean = boardFactory.manualPlacement(this.size, this.ships);
     }
 
 
@@ -108,5 +117,8 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public void randomPlacement() {
     }
 }

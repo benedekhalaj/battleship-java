@@ -1,11 +1,74 @@
 package com.codecool.brothership.battleship;
 
+
+import com.codecool.brothership.utilities.RandomHelper;
+
 import java.util.*;
 
 public class BoardFactory {
 
-    public Board[][] randomPlacement(int rows, int cols) {
-        return new Board[rows][cols];
+    public List<Ship> randomPlacement(int boardSize) {
+        List<Ship> randomShips = new ArrayList<>();
+        Coordinate[][] coordinates = createBoarCoordinates(boardSize);
+        for (ShipType shipType : ShipType.values()) {
+            int shipLength = shipType.getLength();
+            ShipSquare[] shipSquares = createRandomShipSquares(boardSize, shipLength, coordinates);
+            removeOccupiedCoordinates(coordinates, shipSquares);
+            randomShips.add(new Ship(shipType, shipSquares));
+        }
+        return randomShips;
+    }
+
+    private Coordinate[][] removeOccupiedCoordinates(Coordinate[][] coordinates, ShipSquare[] shipSquares) {
+        for (int y = 0; y < coordinates.length; y++) {
+            for (int x = 0; x < coordinates[y].length; x++) {
+                for (ShipSquare shipSquare : shipSquares) {
+                    Coordinate coordinate = coordinates[y][x];
+                    if (coordinate != null) {
+                        int xCord = coordinate.getX();
+                        int yCord = coordinate.getY();
+                        boolean isCoordinateOccupied = (xCord == shipSquare.getX() && yCord == shipSquare.getY());
+                        if (isCoordinateOccupied) {
+                            coordinates[y][x] = null;
+                        }
+                    }
+                }
+            }
+        }
+        return coordinates;
+    }
+
+    private Coordinate[][] createBoarCoordinates(int boardSize) {
+        Coordinate[][] coordinates = new Coordinate[boardSize][boardSize];
+        for (int y = 0; y < coordinates.length; y++) {
+            for (int x = 0; x < coordinates.length; x++) {
+                coordinates[y][x] = new Coordinate(x, y);
+            }
+        }
+        return coordinates;
+    }
+
+    private ShipSquare[] createRandomShipSquares(int boardSize, int shipLength, Coordinate[][] coordinates) {
+        Random random = RandomHelper.getRandom();
+        ShipSquare[] shipSquares = new ShipSquare[shipLength];
+        ShipDirection randomDirectionType = ShipDirection.values()[random.nextInt(ShipDirection.values().length)];
+        boolean isVertical = randomDirectionType.equals(ShipDirection.VERTICAL);
+        int xMax = (isVertical) ? boardSize: boardSize - shipLength ;
+        int yMax = (isVertical) ? boardSize -shipLength : boardSize;
+        int randomX = random.nextInt(xMax);
+        int randomY = random.nextInt(yMax);
+        for (int i = 0; i < shipLength; i++) {
+            if (coordinates[randomY][randomX] == null) {
+                return createRandomShipSquares(boardSize, shipLength, coordinates);
+            }
+            shipSquares[i] = new ShipSquare(randomX, randomY);
+            if (isVertical) {
+                randomY++;
+            } else {
+                randomX++;
+            }
+        }
+        return shipSquares;
     }
 
     public WaterSquare[][] manualPlacement(int size, List<Ship> ships) {
@@ -41,14 +104,14 @@ public class BoardFactory {
             for (int x = 0; x < size; x++) {
                 HashMap<SquareType, Integer> data = new HashMap<>();
                 Coordinate coordinate = new Coordinate(x, y);
-                int shipIndex = getShipIndex(x , y, ships);
-                if(shipIndex > notShipIndex) {
+                int shipIndex = getShipIndex(x, y, ships);
+                if (shipIndex > notShipIndex) {
                     data.put(SquareType.SHIP, shipIndex);
                 } else {
                     data.put(SquareType.OCEAN, oceanIndex);
                     oceanIndex++;
                 }
-                boardMap.put(coordinate,data);
+                boardMap.put(coordinate, data);
             }
         }
         return boardMap;
