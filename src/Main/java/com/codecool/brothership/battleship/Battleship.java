@@ -9,9 +9,43 @@ public class Battleship {
 
     public void run() {
         // TODO this loop runs the game
-        System.out.println("This is the main loop");
-        GameMode gameMode = GameMode.P_VS_P;
-        Game game = new Game(display, input, gameMode);
-        game.play();
+        boolean isInputValid = false;
+        MenuChoice menuChoice = null;
+        display.printMenu();
+        while (!isInputValid) {
+            String userInput = input.getInput();
+            menuChoice = MenuChoice.getMenuChoiceByUserInput(userInput);
+            if (menuChoice != null) {
+                isInputValid = true;
+            } else {
+                display.printMessage("Invalid input!");
+            }
+        }
+        switch (menuChoice) {
+            case PLAY:
+                GameMode gameMode = getGameMode();
+                Game game = new Game(display, input, gameMode);
+                game.play();
+                break;
+            case EXIT:
+                System.exit(0);
+                break;
+        }
+    }
+
+    private GameMode getGameMode() {
+        boolean isInputValid = false;
+        GameMode gameMode = null;
+        while (!isInputValid) {
+            display.printGameModes();
+            String userInput = input.getInput();
+            gameMode = GameMode.getGameModeByUserInput(userInput);
+            if (gameMode != null) {
+                isInputValid = true;
+            } else {
+                display.printMessage("Invalid input!");
+            }
+        }
+        return gameMode;
     }
 }
