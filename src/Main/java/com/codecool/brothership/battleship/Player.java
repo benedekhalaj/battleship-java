@@ -25,11 +25,6 @@ public class Player {
         return board.getShotStatus(shotCoordinate);
     }
 
-    public Square shoot() {
-        // TODO returns valid shot square
-        return new Square(0, 0);
-    }
-
     public boolean isAlive() {
         return board.isThereAnyShips();
     }
