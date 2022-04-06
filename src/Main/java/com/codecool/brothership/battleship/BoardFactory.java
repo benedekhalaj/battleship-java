@@ -1,8 +1,5 @@
 package com.codecool.brothership.battleship;
 
-
-import com.codecool.brothership.utilities.RandomHelper;
-
 import java.util.*;
 
 public class BoardFactory {
@@ -27,7 +24,6 @@ public class BoardFactory {
                     if (isOwnSquare) {
                         removeShipAndNeighbours(coordinates, x, y);
                     }
-
                 }
             }
         }
@@ -57,7 +53,7 @@ public class BoardFactory {
     }
 
     private ShipSquare[] createRandomShipSquares(int boardSize, int shipLength, Coordinate[][] coordinates) {
-        Random random = RandomHelper.getRandom();
+        Random random = new Random();
         ShipSquare[] shipSquares = new ShipSquare[shipLength];
         ShipDirection randomDirectionType = ShipDirection.values()[random.nextInt(ShipDirection.values().length)];
         boolean isVertical = randomDirectionType.equals(ShipDirection.VERTICAL);
