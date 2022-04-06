@@ -14,4 +14,13 @@ public enum GameMode {
     public String getInputId() {
         return inputId;
     }
+
+    public static GameMode getGameModeByUserInput(String userInput) {
+        for (GameMode gameMode : values()) {
+            if (userInput.equals(gameMode.inputId)) {
+                return gameMode;
+            }
+        }
+        return null;
+    }
 }
