@@ -1,18 +1,12 @@
 package com.codecool.brothership.battleship;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Board {
     private final List<WaterSquare> ocean;
     private final List<Ship> ships;
     private final HashMap<Coordinate, HashMap<SquareType, Integer>> boardMap;
     private final int size;
-
-    private static final String SMALL_SEPARATOR = " ";
-    private static final String MEDIUM_SEPARATOR = "  ";
-    private static final String BIG_SEPARATOR = "   ";
 
     public Board(int size, List<Ship> ships) {
         this.ships = ships;
@@ -28,10 +22,8 @@ public class Board {
         for (int y = 0; y < size; y++) {
             StringBuilder boardRow = new StringBuilder();
             for (int x = 0; x < size; x++) {
-                String squareCharacter = getShipSquareCharacter(x, y);
-                if (squareCharacter == null) {
-                    squareCharacter = getWaterSquareCharacter(x, y);
-                }
+                String squareCharacter;
+                squareCharacter = getSquareCharacter(y, x);
                 boardRow.append(squareCharacter);
             }
             boardRows.add(boardRow.toString());
@@ -39,21 +31,26 @@ public class Board {
         return boardRows;
     }
 
-    private String getWaterSquareCharacter(int x, int y) {
-        for (WaterSquare waterSquare : ocean) {
-            if (waterSquare.getX() == x && waterSquare.getY() == y) {
-                return waterSquare.getStatus().getCharacter();
-            }
+    private String getSquareCharacter(int y, int x) {
+        String squareCharacter;
+        Coordinate coordinate = new Coordinate(x, y);
+        HashMap<SquareType, Integer> coordinateInformation = boardMap.get(coordinate);
+        boolean isOcean = coordinateInformation.containsKey(SquareType.OCEAN);
+        if (isOcean) {
+            int index = coordinateInformation.get(SquareType.OCEAN);
+            WaterSquare waterSquare = this.ocean.get(index);
+            squareCharacter = waterSquare.getStatus().getCharacter();
+        } else {
+            int index = coordinateInformation.get(SquareType.SHIP);
+            squareCharacter = getShipSquareCharacter(x, y, this.ships.get(index));
         }
-        return null;
+        return squareCharacter;
     }
 
-    private String getShipSquareCharacter(int x, int y) {
-        for (Ship ship : ships) {
-            for (ShipSquare square : ship.getSquares()) {
-                if (square.getX() == x && square.getY() == y) {
-                    return square.getStatus().getCharacter();
-                }
+    private String getShipSquareCharacter(int x, int y, Ship ship) {
+        for (ShipSquare square : ship.getSquares()) {
+            if (square.getX() == x && square.getY() == y) {
+                return square.getStatus().getCharacter();
             }
         }
         return null;

@@ -43,9 +43,9 @@ public class BoardFactory {
                     data.put(SquareType.SHIP, shipIndex);
                 } else {
                     data.put(SquareType.OCEAN, oceanIndex);
+                    oceanIndex++;
                 }
                 boardMap.put(coordinate,data);
-                oceanIndex++;
             }
         }
         return boardMap;
