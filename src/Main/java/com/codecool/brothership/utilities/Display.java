@@ -1,7 +1,8 @@
 package com.codecool.brothership.utilities;
 
-import com.codecool.brothership.battleship.Square;
-import com.codecool.brothership.battleship.SquareStatus;
+import com.codecool.brothership.battleship.*;
+
+import java.util.List;
 
 public class Display {
     private static final int UPPER_CHAR_NUM = 65;
@@ -9,31 +10,9 @@ public class Display {
     private static final String MEDIUM_SEPARATOR = "  ";
     private static final String BIG_SEPARATOR = "   ";
     private static final String BIG_PLAYER_SEPARATOR = BIG_SEPARATOR + "|" + BIG_SEPARATOR;
-    private static final String MEDIUM_PLAYER_SEPARATOR = MEDIUM_SEPARATOR + "|" + MEDIUM_SEPARATOR;
+    private static final String SMALL_PLAYER_SEPARATOR = MEDIUM_SEPARATOR + "|" + BIG_SEPARATOR;
     private static final String NEW_LINE = "\n";
     private static final int COORDINATE_SIGN = -1;
-
-
-    public void printBoard(Square[][] board) {
-        for (int rowIndex = COORDINATE_SIGN; rowIndex < board.length; rowIndex++) {
-            StringBuilder displayedRow = new StringBuilder();
-            for (int colIndex = COORDINATE_SIGN; colIndex < board[0].length; colIndex++) {
-                String field;
-                if (rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN) {
-                    field = BIG_SEPARATOR;
-                } else if (rowIndex == COORDINATE_SIGN && colIndex != COORDINATE_SIGN) {
-                    field = (colIndex + 1  < 10) ? String.valueOf(colIndex + 1) + SMALL_SEPARATOR : String.valueOf((colIndex + 1));
-                } else if (colIndex == COORDINATE_SIGN && rowIndex != COORDINATE_SIGN) {
-                    field = Character.toString(UPPER_CHAR_NUM + rowIndex) + SMALL_SEPARATOR ;
-                } else {
-                    field = board[rowIndex][colIndex].getStatus().getCharacter();
-                }
-                displayedRow.append(field);
-            }
-            System.out.println(displayedRow);
-        }
-        // TODO prints the board(ocean)
-    }
 
     public void printGameModes() {
         System.out.println("""
@@ -50,48 +29,6 @@ public class Display {
                 0: Exit""");
     }
 
-    public void printGameplay(Square[][] playerBoard, Square[][] enemyBoard) {
-        // TODO prints the gameplay
-        for (int rowIndex = COORDINATE_SIGN; rowIndex < playerBoard.length; rowIndex++) {
-            StringBuilder displayedPlayerRow = new StringBuilder();
-            StringBuilder displayedEnemyRow = new StringBuilder();
-            boolean characterCoordinatesLine = rowIndex == COORDINATE_SIGN;
-            String playerSeparator = (characterCoordinatesLine) ? MEDIUM_PLAYER_SEPARATOR : BIG_PLAYER_SEPARATOR;
-
-            for (int colIndex = COORDINATE_SIGN; colIndex < playerBoard[0].length; colIndex++) {
-                String playerField;
-                String enemyField;
-                boolean topLeftCorner = rowIndex == COORDINATE_SIGN && colIndex == COORDINATE_SIGN;
-                boolean numberCoordinatesLine = colIndex == COORDINATE_SIGN;
-
-                if (topLeftCorner) {
-                    playerField = BIG_SEPARATOR;
-                    enemyField = playerField;
-                } else if (characterCoordinatesLine) {
-                    int colCoordinate = rowIndex + 1;
-                    if (colCoordinate < 10) {
-                        playerField = colCoordinate + SMALL_SEPARATOR;
-                    } else {
-                        playerField = String.valueOf(colCoordinate);
-                    }
-                    enemyField = playerField;
-                } else if (numberCoordinatesLine) {
-                    String characterCoordinate = Character.toString(UPPER_CHAR_NUM + colIndex) + SMALL_SEPARATOR;
-                    playerField = characterCoordinate;
-                    enemyField = playerField;
-                } else {
-                    playerField = playerBoard[rowIndex][colIndex].getStatus().getCharacter();
-                    String enemyFieldChar =  enemyBoard[rowIndex][colIndex].getStatus().getCharacter();
-                    boolean isEnemyShip = enemyFieldChar.equals(SquareStatus.SHIP.getCharacter());
-                    enemyField = (isEnemyShip) ? SquareStatus.EMPTY.getCharacter() : enemyFieldChar;
-                }
-                displayedPlayerRow.append(playerField);
-                displayedEnemyRow.append(enemyField);
-            }
-            System.out.println(displayedPlayerRow + playerSeparator + displayedEnemyRow);
-        }
-    }
-
     public void printResult() {
         // TODO prints the game result
     }
@@ -104,5 +41,73 @@ public class Display {
     public void printMessage(String message) {
         // Prints message with newline.
         System.out.println(message);
+    }
+
+    public void printPlacementBoard(List<Ship> ships, int boardSize) {
+        for (int y = COORDINATE_SIGN; y < boardSize; y++) {
+            StringBuilder displayedRow = new StringBuilder();
+            for (int x = COORDINATE_SIGN; x < boardSize; x++) {
+                String squareCharacter;
+                boolean numberCoordinatesRow = (y == COORDINATE_SIGN);
+                boolean characterCoordinatesPosition = (x == COORDINATE_SIGN);
+                if (numberCoordinatesRow) {
+                    displayedRow.append(makeNumberCoordinatesRow(boardSize));
+                    break;
+                } else if (characterCoordinatesPosition) {
+                    squareCharacter = Character.toString(UPPER_CHAR_NUM + y) + SMALL_SEPARATOR;
+                } else {
+                    if (isShipAtCoordinate(ships, y, x)) {
+                        squareCharacter = ShipSquareStatus.SHIP.getCharacter();
+                    } else {
+                        squareCharacter = WaterSquareStatus.EMPTY.getCharacter();
+                    }
+                }
+                displayedRow.append(squareCharacter);
+            }
+            System.out.println(displayedRow);
+        }
+    }
+
+    private boolean isShipAtCoordinate(List<Ship> ships, int y, int x) {
+        for (Ship ship : ships) {
+            for (ShipSquare shipSquare : ship.getSquares()) {
+                if (shipSquare.getX() == x && shipSquare.getY() == y) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void printBattlefield(List<String> playerBoardRows, List<String> opponentBoardRows, int boardSize) {
+        for (int y = COORDINATE_SIGN; y < playerBoardRows.size(); y++) {
+            StringBuilder row = new StringBuilder();
+            boolean numberCoordinatesRow = (y == COORDINATE_SIGN);
+            if (numberCoordinatesRow) {
+                String coordinatesRow = makeNumberCoordinatesRow(boardSize);
+                row.append(coordinatesRow).append(SMALL_PLAYER_SEPARATOR).append(coordinatesRow);
+            } else {
+                row.append(Character.toString(UPPER_CHAR_NUM + y))
+                        .append(SMALL_SEPARATOR)
+                        .append(playerBoardRows.get(y))
+                        .append(BIG_PLAYER_SEPARATOR)
+                        .append(Character.toString(UPPER_CHAR_NUM + y))
+                        .append(SMALL_SEPARATOR)
+                        .append(opponentBoardRows.get(y));
+            }
+            System.out.println(row);
+        }
+    }
+
+    private String makeNumberCoordinatesRow(int boardSize) {
+        StringBuilder row = new StringBuilder();
+        for (int x = 1; x < boardSize + 1; x++) {
+            boolean topLeftCorner = (x == 1);
+            if (topLeftCorner) {
+                row.append(MEDIUM_SEPARATOR);
+            }
+            row.append(x).append(SMALL_SEPARATOR);
+        }
+        return row.toString();
     }
 }

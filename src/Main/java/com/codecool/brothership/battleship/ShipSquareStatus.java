@@ -1,16 +1,14 @@
 package com.codecool.brothership.battleship;
 
-public enum SquareStatus {
-    EMPTY("\uD83D\uDD35"),
+public enum ShipSquareStatus {
     SHIP("\uD83C\uDFC0"),
     HIT("\uD83D\uDCA5"),
-    SUNK("✖"),
-    MISSED("⚫");
+    SUNK("✖");
 
     private final String character;
 
-    SquareStatus(String status) {
-        this.character = status;
+    ShipSquareStatus(String character) {
+        this.character = character;
     }
 
     public String getCharacter() {
