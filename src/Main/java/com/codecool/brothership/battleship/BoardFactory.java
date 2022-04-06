@@ -23,15 +23,11 @@ public class BoardFactory {
         for (int y = 0; y < coordinates.length; y++) {
             for (int x = 0; x < coordinates[y].length; x++) {
                 for (ShipSquare shipSquare : shipSquares) {
-                    Coordinate coordinate = coordinates[y][x];
-                    if (coordinate != null) {
-                        int xCord = coordinate.getX();
-                        int yCord = coordinate.getY();
-                        boolean isCoordinateOccupied = (xCord == shipSquare.getX() && yCord == shipSquare.getY());
-                        if (isCoordinateOccupied) {
-                            removeShipAndNeighbours(coordinates, x, y);
-                        }
+                    boolean isOwnSquare = (x == shipSquare.getX() && y == shipSquare.getY());
+                    if (isOwnSquare) {
+                        removeShipAndNeighbours(coordinates, x, y);
                     }
+
                 }
             }
         }
@@ -44,7 +40,7 @@ public class BoardFactory {
             for (int neighbourX = firstNeighbour; neighbourX < lastNeighbour; neighbourX++) {
                 int x = ownX + neighbourX;
                 int y = ownY + neighbourY;
-                boolean isShipOnBoard = (x < coordinates.length && y < coordinates.length && x >= 0 && y >= 0);
+                boolean isShipOnBoard = (x < coordinates[0].length && y < coordinates.length && x >= 0 && y >= 0);
                 if (isShipOnBoard) coordinates[y][x] = null;
             }
         }
@@ -65,8 +61,8 @@ public class BoardFactory {
         ShipSquare[] shipSquares = new ShipSquare[shipLength];
         ShipDirection randomDirectionType = ShipDirection.values()[random.nextInt(ShipDirection.values().length)];
         boolean isVertical = randomDirectionType.equals(ShipDirection.VERTICAL);
-        int xMax = (isVertical) ? boardSize: boardSize - shipLength ;
-        int yMax = (isVertical) ? boardSize -shipLength : boardSize;
+        int xMax = (isVertical) ? boardSize : boardSize - shipLength;
+        int yMax = (isVertical) ? boardSize - shipLength : boardSize;
         int randomX = random.nextInt(xMax);
         int randomY = random.nextInt(yMax);
         for (int i = 0; i < shipLength; i++) {
