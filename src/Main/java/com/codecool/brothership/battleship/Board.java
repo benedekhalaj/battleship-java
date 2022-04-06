@@ -45,10 +45,6 @@ public class Board {
         return null;
     }
 
-    public List<Ship> getShips() {
-        return this.ships;
-    }
-
     public ShotStatus getShotStatus(Coordinate coordinate) {
         for (Ship ship : ships) {
             for (ShipSquare shipSquare : ship.getSquares()) {

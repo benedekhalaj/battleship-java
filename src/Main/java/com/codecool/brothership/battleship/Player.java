@@ -17,21 +17,12 @@ public class Player {
         return id;
     }
 
-    public List<Ship> getShips() {
-        return this.board.getShips();
-    }
-
     public PlayerType getType() {
         return type;
     }
 
     public ShotStatus getShotStatus(Coordinate shotCoordinate) {
         return board.getShotStatus(shotCoordinate);
-    }
-
-    public Square shoot() {
-        // TODO returns valid shot square
-        return new Square(0, 0);
     }
 
     public boolean isAlive() {
@@ -44,5 +35,10 @@ public class Player {
 
     public List<String> getBoardRows() {
         return board.getBoardRows();
+    }
+
+    public Coordinate shoot() {
+        // Human player not uses
+        return null;
     }
 }
