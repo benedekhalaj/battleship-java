@@ -1,11 +1,13 @@
 package com.codecool.brothership.battleship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Board {
     private final List<WaterSquare> ocean;
     private final List<Ship> ships;
+    private final HashMap<Coordinate, HashMap<SquareType, Integer>> boardMap;
     private final int size;
 
     private static final String SMALL_SEPARATOR = " ";
@@ -17,6 +19,7 @@ public class Board {
         this.size = size;
         BoardFactory boardFactory = new BoardFactory();
         this.ocean = boardFactory.manualPlacement(size, ships);
+        this.boardMap = boardFactory.makeBoardMap(size, ships);
     }
 
 
