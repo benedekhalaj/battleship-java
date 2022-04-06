@@ -112,19 +112,7 @@ public class Game {
             }
             player.createBoard(BOARD_SIZE, ships);
         } else {
-            // TODO Random placement
             player.createRandomBoard(BOARD_SIZE);
-            // THIS IS DUMMY DATA FOR TESTING PURPOSES
-//            ships.add(new Ship(ShipType.DESTROYER,
-//                    createShipSquares(new Coordinate(0, 0), ShipDirection.VERTICAL, 2)));
-//            ships.add(new Ship(ShipType.SUBMARINE,
-//                    createShipSquares(new Coordinate(2, 0), ShipDirection.VERTICAL, 3)));
-//            ships.add(new Ship(ShipType.CRUISER,
-//                    createShipSquares(new Coordinate(4, 0), ShipDirection.VERTICAL, 3)));
-//            ships.add(new Ship(ShipType.BATTLESHIP,
-//                    createShipSquares(new Coordinate(6, 0), ShipDirection.VERTICAL, 4)));
-//            ships.add(new Ship(ShipType.CARRIER,
-//                    createShipSquares(new Coordinate(8, 0), ShipDirection.VERTICAL, 5)));
         }
     }
 
