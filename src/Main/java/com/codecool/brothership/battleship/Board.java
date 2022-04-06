@@ -1,7 +1,5 @@
 package com.codecool.brothership.battleship;
 
-import com.codecool.brothership.utilities.RandomHelper;
-
 import java.util.*;
 
 public class Board {

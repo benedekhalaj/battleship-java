@@ -19,7 +19,7 @@ public class BoardFactory {
         return randomShips;
     }
 
-    private Coordinate[][] removeOccupiedCoordinates(Coordinate[][] coordinates, ShipSquare[] shipSquares) {
+    private void removeOccupiedCoordinates(Coordinate[][] coordinates, ShipSquare[] shipSquares) {
         for (int y = 0; y < coordinates.length; y++) {
             for (int x = 0; x < coordinates[y].length; x++) {
                 for (ShipSquare shipSquare : shipSquares) {
@@ -35,7 +35,6 @@ public class BoardFactory {
                 }
             }
         }
-        return coordinates;
     }
 
     private Coordinate[][] createBoarCoordinates(int boardSize) {
