@@ -17,10 +17,6 @@ public class Player {
         return id;
     }
 
-    public List<Ship> getShips() {
-        return this.board.getShips();
-    }
-
     public PlayerType getType() {
         return type;
     }
