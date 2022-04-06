@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final List<WaterSquare> ocean = new ArrayList<>();
+    private final List<WaterSquare> ocean;
     private final List<Ship> ships;
     private final int size;
 
@@ -15,30 +15,10 @@ public class Board {
     public Board(int size, List<Ship> ships) {
         this.ships = ships;
         this.size = size;
-        createOcean();
+        BoardFactory boardFactory = new BoardFactory();
+        this.ocean = boardFactory.manualPlacement(size, ships);
     }
 
-    private void createOcean() {
-        // TODO fill ocean with waterSquares
-        for (int y = 0; y < size; y++) {
-            for (int x = 0; x < size; x++) {
-                if (isSquareEmpty(x, y)) {
-                    ocean.add(new WaterSquare(x, y));
-                }
-            }
-        }
-    }
-
-    private boolean isSquareEmpty(int x, int y) {
-        for (Ship ship : ships) {
-            for (Square square : ship.getSquares()) {
-                if (square.getX() == x && square.getY() == y) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     public List<String> getBoardRows() {
         List<String> boardRows = new ArrayList<>();
